@@ -2,9 +2,16 @@ package com.lgadetsky.orderservice.repository;
 
 import com.lgadetsky.orderservice.model.Order;
 
+/* TODO
+*   Добавить selectALL
+*            existById*/
+
+/**
+ * Describe all methods for working with db
+ */
 public interface OrderRepository {
-    Order save(Order order);
-    Order findById(long id);
-    Order update(Order order);
-    void delete(long id);
+    public Order insertOrder(Order order);
+    public Order selectOrder(long id);
+    public void updateOrder(Order order);
+    public void deleteOrder(long id);
 }
