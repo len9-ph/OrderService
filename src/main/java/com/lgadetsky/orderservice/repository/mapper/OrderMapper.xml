@@ -1,0 +1,64 @@
+<!--<?xml version="1.0" encoding="UTF-8 ?>-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgadetsky.orderservice.repository.mapper.OrderMapper">
+
+    <resultMap id="orderItemResultMap" type="com.lgadetsky.orderservice.model.OrderItem">
+        <result column="ID" property="id"/>
+        <result column="ORDER_ID" property="orderId"/>
+        <result column="itemName" property="ITEM_NAME"/>
+    </resultMap>
+    
+    <resultMap id="orderResultMap" type="com.lgadetsky.orderservice.model.Order">
+        <result column="ID" property="id" />
+        <result column="ORDER_STATUS_ID" property="orderStatusId"/>
+        <result column="CUSTOMER_NAME" property="customerName"/>
+        <result column="CUSTOMER_PHONE" property="customerPhone"/>
+        <result column="CUSTOMER COMMENT" property="customerComment"/>
+        <collection property="orderItems" resultMap="orderItemResultMap" columnPrefix="OI_"/>
+    </resultMap>
+
+    <insert id="insertOrder"
+            parameterType="com.lgadetsky.orderservice.model.Order"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_COMMENT)
+        VALUES (NEXTVAL('order_seq'), #{customerName}, #{customerPhone}, #{customerComment});
+    </insert>
+
+    <select id="findOrderById"
+            parameterType="int"
+            resultMap="orderResultMap">
+        SELECT o.ID, o.ORDER_STATUS_ID, o.CUSTOMER_NAME, o.CUSTOMER_PHONE, o.CUSTOMER_COMMENT,
+               oi.ID, oi.ORDER_ID, oi.ITEM_NAME
+        FROM ORDER as o
+        JOIN ORDER_ITEM as oi o.ID = oi.ORDER_ID
+        WHERE o.ID = #{id}
+    </select>
+
+    <select id="findAllUsers"
+            resultMap="orderResultMap">
+        SELECT o.ID, o.ORDER_STATUS_ID, o.CUSTOMER_NAME, o.CUSTOMER_PHONE, o.CUSTOMER_COMMENT,
+               oi.ID, oi.ORDER_ID, oi.ITEM_NAME
+        FROM ORDER as o
+                 JOIN ORDER_ITEM as oi o.ID = oi.ORDER_ID
+    </select>
+    
+    <update id="update"
+            parameterType="com.lgadetsky.orderservice.model.Order">
+        UPDATE ORDER
+        SET
+            ORDER_STATUS_ID=#{orderStatusId},
+            CUSTOMER_NAME=#{customerName},
+            CUSTOMER_PHONE=#{customerPhone},
+            CUSTOMER_COMMENT=#{customerComment}
+        WHERE ID = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="int">
+        DELETE FROM ORDER WHERE ID = #{id}
+    </delete>
+
+
+</mapper>
