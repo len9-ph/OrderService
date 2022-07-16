@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgadetsky.orderservice.repository.mapper.OrderItemMapper">
+
+    <insert id="insertOrderItems"
+            parameterType="com.lgadetsky.orderservice.model.OrderItem"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO order_item (ID, ORDER_ID, ITEM_NAME) VALUES
+        <foreach collection="orderItems" item="o" separator=", ">
+            (NEXTVAL('order_item_seq'), #{o.orderId}, #{o.itemName})
+        </foreach>
+    </insert>
+
+    <select id="findByOrderId"
+            parameterType="int"
+            resultType="com.lgadetsky.orderservice.model.OrderItem">
+        SELECT * from order_item where order_id = #{id}
+    </select>
+
+    <update id="update"
+            parameterType="com.lgadetsky.orderservice.model.OrderItem">
+        update order_item as oi set
+            item_name = noi.item_name
+        from (values
+        <foreach collection='orderItems' item='o' separator=', '>
+            (#{o.id}, #{o.itemName})
+        </foreach>) as noi(ID, ITEM_NAME)
+        where noi.ID = oi.id;
+    </update>
+
+    <delete id="delete"
+            parameterType="int">
+        delete from order_item where id in (
+            <foreach collection="idItems" item="id" open="(" separator=", " close=")">
+                #{id}
+            </foreach>)
+    </delete>
+
+</mapper>

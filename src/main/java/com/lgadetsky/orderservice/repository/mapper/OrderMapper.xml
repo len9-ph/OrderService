@@ -1,4 +1,4 @@
-<!--<?xml version="1.0" encoding="UTF-8 ?>-->
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -23,7 +23,7 @@
             parameterType="com.lgadetsky.orderservice.model.Order"
             useGeneratedKeys="true"
             keyProperty="id">
-        INSERT INTO "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_COMMENT)
+        INSERT INTO ORDER (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_COMMENT)
         VALUES (NEXTVAL('order_seq'), #{customerName}, #{customerPhone}, #{customerComment});
     </insert>
 
