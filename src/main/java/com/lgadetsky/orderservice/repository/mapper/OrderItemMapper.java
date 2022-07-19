@@ -2,6 +2,7 @@ package com.lgadetsky.orderservice.repository.mapper;
 
 import com.lgadetsky.orderservice.model.OrderItem;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 

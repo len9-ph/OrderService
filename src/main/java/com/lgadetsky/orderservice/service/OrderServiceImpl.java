@@ -10,17 +10,20 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService{
 
+    private final OrderRepositoryImpl orderRepository;
     @Autowired
-    private OrderRepositoryImpl orderRepository;
-
-    @Override
-    public void create(Order order) {
-        orderRepository.insertOrder(order);
+    public OrderServiceImpl(OrderRepositoryImpl orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     @Override
-    public List readAll() {
-        return null;
+    public Order create(Order order) {
+        return orderRepository.insertOrder(order);
+    }
+
+    @Override
+    public List<Order> readAll() {
+        return orderRepository.selectAllOrders();
     }
 
     @Override
@@ -29,12 +32,12 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public boolean update(Order order) {
-        return false;
+    public Order update(Order order) {
+        return orderRepository.updateOrder(order);
     }
 
     @Override
-    public boolean delete(long id) {
-        return false;
+    public void delete(long id) {
+        orderRepository.deleteOrder(id);
     }
 }
