@@ -27,7 +27,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order readById(long id) {
+    public Order readById(int id) {
         return orderRepository.selectOrder(id);
     }
 

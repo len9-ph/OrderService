@@ -36,14 +36,14 @@ public class OrderRepositoryImpl implements OrderRepository{
         List<OrderItem> orderItems = order.getOrderItems();
         if(!orderItems.isEmpty()) {
             //Обновление идентификатора элементов заказа
-            orderItems.forEach(orderItem -> orderItem.setOrderId((int) order.getId()));
+            orderItems.forEach(orderItem -> orderItem.setOrderId(order.getId()));
             orderItemMapper.insertOrderItems(orderItems);
         }
         return order;
     }
 
     @Override
-    public Order selectOrder(long id) {
+    public Order selectOrder(int id) {
         return orderMapper.findOrderById(id);
     }
 

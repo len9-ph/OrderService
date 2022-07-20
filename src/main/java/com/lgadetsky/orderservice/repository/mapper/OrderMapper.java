@@ -9,7 +9,7 @@ public interface OrderMapper {
     //Вставить заказ
     void insertOrder(Order order);
     //Найти пользователя по id
-    Order findOrderById(long id);
+    Order findOrderById(int id);
     //Найти всех пользователей
     List<Order> findAllOrders();
     //Обновить пользователя

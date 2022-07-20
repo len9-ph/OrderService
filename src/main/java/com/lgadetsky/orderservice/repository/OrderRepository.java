@@ -13,15 +13,15 @@ import java.util.List;
  */
 public interface OrderRepository {
 
-    public Order insertOrder(Order order);
+    Order insertOrder(Order order);
 
-    public Order selectOrder(long id);
+    Order selectOrder(int id);
 
-    public List selectAllOrders();
+    List selectAllOrders();
 
     //public boolean orderExistById(long id);
 
-    public Order updateOrder(Order order);
+    Order updateOrder(Order order);
 
-    public void deleteOrder(long id);
+    void deleteOrder(long id);
 }

@@ -27,12 +27,12 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{id}")
-    public Order readById(@PathVariable long id) {
+    public Order readById(@PathVariable int id) {
         return orderService.readById(id);
     }
 
     @PutMapping("/orders/{id}")
-    public Order update(@RequestBody Order order, @PathVariable long id) {
+    public Order update(@RequestBody Order order, @PathVariable int id) {
         order.setId(id);
         return orderService.update(order);
     }
