@@ -1,5 +1,6 @@
 package com.lgadetsky.orderservice.controller;
 
+import com.lgadetsky.orderservice.exception.OrderDataBaseEmptyException;
 import com.lgadetsky.orderservice.exception.OrderIdAlreadyExistException;
 import com.lgadetsky.orderservice.exception.OrderIdNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
@@ -8,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Tag(name = "OrderController", description = "Главный контроллер приложения")
@@ -33,7 +36,7 @@ public class OrderController {
 
     @GetMapping("/order/{id}")
     @Operation(
-            summary = "Получение пользователя по идентификатору"
+            summary = "Получить пользователя по идентификатору"
     )
     Order readById(@PathVariable int id) {
         Order order = orderService.findById(id);
@@ -41,6 +44,18 @@ public class OrderController {
             throw new OrderIdNotFoundException();
         }
         return order;
+    }
+    @GetMapping("/order")
+    @Operation(
+            summary = "Получить всех пользователей"
+    )
+    List<Order> readAll() {
+        if(!orderService.findAll().isEmpty())
+            return orderService.findAll();
+        else {
+            throw new OrderDataBaseEmptyException();
+        }
+
     }
 
     @PutMapping("/order/{id}")

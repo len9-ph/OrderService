@@ -4,6 +4,8 @@ import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @org.springframework.stereotype.Service
 public class OrderService implements Service{
     private final OrderRepository orderRepository;
@@ -21,6 +23,11 @@ public class OrderService implements Service{
     @Override
     public Order findById(int id) {
         return orderRepository.selectOrderById(id);
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return orderRepository.selectAll();
     }
 
     @Override

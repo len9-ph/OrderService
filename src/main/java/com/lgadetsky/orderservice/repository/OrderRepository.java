@@ -41,6 +41,11 @@ public class OrderRepository implements Repository{
     }
 
     @Override
+    public List<Order> selectAll() {
+        return orderMapper.findAll();
+    }
+
+    @Override
     @Transactional
     public Order update(Order order) {
         if(orderMapper.findById(order.getId()) != null){
