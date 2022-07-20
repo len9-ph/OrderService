@@ -1,13 +1,35 @@
 package com.lgadetsky.orderservice.service;
 
 import com.lgadetsky.orderservice.model.Order;
+import com.lgadetsky.orderservice.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+@org.springframework.stereotype.Service
+public class OrderService implements Service{
+    private final OrderRepository orderRepository;
 
-public interface OrderService {
-    Order create(Order order);
-    List readAll();
-    Order readById(int id);
-    Order update(Order order);
-    void delete(long id);
+    @Autowired
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    @Override
+    public Order create(Order order) {
+        return orderRepository.create(order);
+    }
+
+    @Override
+    public Order findById(int id) {
+        return orderRepository.selectOrderById(id);
+    }
+
+    @Override
+    public Order update(Order order) {
+        return orderRepository.update(order);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        orderRepository.deleteOrderById(id);
+    }
 }

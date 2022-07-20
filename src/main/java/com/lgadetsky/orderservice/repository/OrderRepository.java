@@ -1,27 +1,53 @@
 package com.lgadetsky.orderservice.repository;
 
 import com.lgadetsky.orderservice.model.Order;
+import com.lgadetsky.orderservice.model.OrderItem;
+import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
+import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/* TODO
-*   Добавить selectALL
-*            existById*/
 
-/**
- * Describe all methods for working with db
- */
-public interface OrderRepository {
+@org.springframework.stereotype.Repository
+public class OrderRepository implements Repository{
 
-    Order insertOrder(Order order);
+    private final OrderMapper orderMapper;
+    private final OrderItemMapper orderItemMapper;
+    @Autowired
+    public OrderRepository(OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
+        this.orderMapper = orderMapper;
+        this.orderItemMapper = orderItemMapper;
+    }
 
-    Order selectOrder(int id);
+    @Override
+    @Transactional
+    public Order create(Order order) {
+        orderMapper.insert(order);
 
-    List selectAllOrders();
+        List<OrderItem> orderItems = order.getOrderItems();
+        if(orderItems != null && !orderItems.isEmpty()) {
+            orderItems.forEach(orderItem -> orderItem.setOrderId(order.getId()));
+            orderItemMapper.insertOrderItems(orderItems);
+        }
+        return order;
+    }
 
-    //public boolean orderExistById(long id);
+    @Override
+    public Order selectOrderById(int id) {
+        return orderMapper.findById(id);
+    }
 
-    Order updateOrder(Order order);
+    @Override
+    @Transactional
+    public Order update(Order order) {
+        return null;
+    }
 
-    void deleteOrder(long id);
+    @Override
+    @Transactional
+    public void deleteOrderById(int id) {
+        orderMapper.deleteById(id);
+    }
 }

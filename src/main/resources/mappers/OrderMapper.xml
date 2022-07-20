@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgadetsky.orderservice.repository.mapper.OrderMapper">
+    <resultMap id="orderItemResultMap" type="com.lgadetsky.orderservice.model.OrderItem">
+        <result property="id" column="ID"/>
+        <result property="orderId" column="ORDER_ID"/>
+        <result property="itemName" column="ITEM_NAME"/>
+    </resultMap>
+    
+    <resultMap id="orderResultMap" type="com.lgadetsky.orderservice.model.Order">
+        <result property="id" column="ID"/>
+        <result property="orderStatusId" column="ORDER_STATUS_ID"/>
+        <result property="customerName" column="CUSTOMER_NAME"/>
+        <result property="customerPhone" column="CUSTOMER_PHONE"/>
+        <result property="customerComment" column="CUSTOMER_COMMENT"/>
+        <collection property="orderItems" resultMap="orderItemResultMap"/>
+    </resultMap>
+
+    <insert id="insert"
+            parameterType="com.lgadetsky.orderservice.model.Order"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)
+        VALUES (NEXTVAL('order_seq'), #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment});
+    </insert>
+
+    <select id="findById"
+            parameterType="int"
+            resultMap="orderResultMap">
+        SELECT o.id, o.order_status_id, o.customer_name, o.customer_phone, o.customer_comment, oi.id, oi.order_id, oi.item_name
+        from "order" as o
+        join order_item oi on o.id = oi.order_id
+        where o.id = #{id};
+    </select>
+
+    <update id="update"
+            parameterType="com.lgadetsky.orderservice.model.Order"
+            flushCache="true"
+            timeout="20">
+        UPDATE "order" SET
+                        order_status_id = #{orderStatusId},
+                        customer_name = #{customerName},
+                        customer_phone = #{customerPhone},
+                        customer_comment = #{customerComment}
+                       WHERE id = #{id};
+    </update>
+
+    <delete id="deleteById"
+            parameterType="int">
+        DELETE from "order" where id = #{id};
+    </delete>
+</mapper>

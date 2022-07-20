@@ -1,46 +1,44 @@
 package com.lgadetsky.orderservice.controller;
 
 import com.lgadetsky.orderservice.model.Order;
-import com.lgadetsky.orderservice.service.OrderServiceImpl;
+import com.lgadetsky.orderservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class OrderController {
-
-    private final OrderServiceImpl orderService;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderController(OrderServiceImpl orderService){
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    @PostMapping("/orders")
-    public Order createOrder(@RequestBody Order order){
+    @PostMapping("/order/{id}")
+    Order create(@RequestBody Order order) {
         return orderService.create(order);
     }
 
-    @GetMapping("/orders")
-    public List<Order> readAll(){
-        return orderService.readAll();
+    @GetMapping("/order/{id}")
+    Order readById(@PathVariable int id) {
+        Order order = orderService.findById(id);
+        if (order == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return order;
     }
 
-    @GetMapping("/orders/{id}")
-    public Order readById(@PathVariable int id) {
-        return orderService.readById(id);
-    }
-
-    @PutMapping("/orders/{id}")
-    public Order update(@RequestBody Order order, @PathVariable int id) {
+    @PutMapping("/order/{id}")
+    Order update(@PathVariable int id, @RequestBody Order order) {
         order.setId(id);
         return orderService.update(order);
     }
 
-    @DeleteMapping("/orders/{id}")
-    void delete(@PathVariable long id) {
-        orderService.delete(id);
+    @DeleteMapping("/order/{id}")
+    void deleteById(@PathVariable int id) {
+        orderService.deleteById(id);
     }
-
 
 }
