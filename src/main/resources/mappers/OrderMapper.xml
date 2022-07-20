@@ -22,14 +22,14 @@
             parameterType="com.lgadetsky.orderservice.model.Order"
             useGeneratedKeys="true"
             keyProperty="id">
-        INSERT INTO "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)
-        VALUES (NEXTVAL('order_seq'), #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment});
+        insert into "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)
+        values (NEXTVAL('order_seq'), #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment});
     </insert>
 
     <select id="findById"
             parameterType="int"
             resultMap="orderResultMap">
-        SELECT o.id, o.order_status_id, o.customer_name, o.customer_phone, o.customer_comment, oi.id, oi.order_id, oi.item_name
+        select o.id, o.order_status_id, o.customer_name, o.customer_phone, o.customer_comment, oi.id, oi.order_id, oi.item_name
         from "order" as o
         join order_item oi on o.id = oi.order_id
         where o.id = #{id};
@@ -39,16 +39,17 @@
             parameterType="com.lgadetsky.orderservice.model.Order"
             flushCache="true"
             timeout="20">
-        UPDATE "order" SET
+        update "order" set
                         order_status_id = #{orderStatusId},
                         customer_name = #{customerName},
                         customer_phone = #{customerPhone},
                         customer_comment = #{customerComment}
-                       WHERE id = #{id};
+                       where id = #{id};
     </update>
 
     <delete id="deleteById"
             parameterType="int">
-        DELETE from "order" where id = #{id};
+        delete from order_item where order_id = #{id};
+        delete from "order" where id = #{id};
     </delete>
 </mapper>

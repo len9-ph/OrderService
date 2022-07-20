@@ -1,5 +1,6 @@
 package com.lgadetsky.orderservice.controller;
 
+import com.lgadetsky.orderservice.exception.OrderIdNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class OrderController {
     Order readById(@PathVariable int id) {
         Order order = orderService.findById(id);
         if (order == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new OrderIdNotFoundException();
         }
         return order;
     }
