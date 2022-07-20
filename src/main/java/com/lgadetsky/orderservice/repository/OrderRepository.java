@@ -8,6 +8,7 @@ import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -68,8 +69,12 @@ public class OrderRepository implements Repository{
     @Transactional
     public Order update(Order order) {
         if(orderMapper.findById(order.getId()) != null){
+            //Order oldOlder = orderMapper.findById(order.getId());
+
+            //orderItemMapper.update(order.getOrderItems());
             orderMapper.update(order);
-            orderItemMapper.update(order.getOrderItems());
+            orderItemMapper.insertOrderItems(order.getOrderItems());
+
         } else {
             throw new OrderIdNotFoundException();
         }
