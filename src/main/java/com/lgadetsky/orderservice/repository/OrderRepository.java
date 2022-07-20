@@ -1,5 +1,6 @@
 package com.lgadetsky.orderservice.repository;
 
+import com.lgadetsky.orderservice.exception.OrderIdNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.OrderItem;
 import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
@@ -42,7 +43,13 @@ public class OrderRepository implements Repository{
     @Override
     @Transactional
     public Order update(Order order) {
-        return null;
+        if(orderMapper.findById(order.getId()) != null){
+            orderMapper.update(order);
+            orderItemMapper.update(order.getOrderItems());
+        } else {
+            throw new OrderIdNotFoundException();
+        }
+        return order;
     }
 
     @Override

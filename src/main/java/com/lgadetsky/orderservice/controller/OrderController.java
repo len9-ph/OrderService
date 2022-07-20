@@ -1,14 +1,16 @@
 package com.lgadetsky.orderservice.controller;
 
+import com.lgadetsky.orderservice.exception.OrderIdAlreadyExistException;
 import com.lgadetsky.orderservice.exception.OrderIdNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@Tag(name = "OrderController", description = "Главный контроллер приложения")
 public class OrderController {
     private final OrderService orderService;
 
@@ -18,11 +20,21 @@ public class OrderController {
     }
 
     @PostMapping("/order/{id}")
+    @Operation(
+            summary = "Создание нового пользователя"
+    )
     Order create(@RequestBody Order order) {
-        return orderService.create(order);
+        if(orderService.findById(order.getId()) == null){
+            return orderService.create(order);
+        }else {
+            throw new OrderIdAlreadyExistException();
+        }
     }
 
     @GetMapping("/order/{id}")
+    @Operation(
+            summary = "Получение пользователя по идентификатору"
+    )
     Order readById(@PathVariable int id) {
         Order order = orderService.findById(id);
         if (order == null) {
@@ -32,12 +44,18 @@ public class OrderController {
     }
 
     @PutMapping("/order/{id}")
+    @Operation(
+            summary = "Обновление пользователя"
+    )
     Order update(@PathVariable int id, @RequestBody Order order) {
         order.setId(id);
         return orderService.update(order);
     }
 
     @DeleteMapping("/order/{id}")
+    @Operation(
+            summary = "Удаление пользователя по идентификатору"
+    )
     void deleteById(@PathVariable int id) {
         orderService.deleteById(id);
     }
