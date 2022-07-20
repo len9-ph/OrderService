@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
+/**
+ * @author Leonid Gadetsky
+ * Класс реализуюший методы для работы с базой данных
+ */
 @org.springframework.stereotype.Repository
 public class OrderRepository implements Repository{
 
@@ -22,6 +26,10 @@ public class OrderRepository implements Repository{
         this.orderItemMapper = orderItemMapper;
     }
 
+    /**
+     * Метод реализуюший добавление нового заказа в базу данных
+     * @param order - заказ который необходимо добавить в базу данных
+     */
     @Override
     @Transactional
     public Order create(Order order) {
@@ -35,16 +43,27 @@ public class OrderRepository implements Repository{
         return order;
     }
 
+    /**
+     * Метод реализуюший выбор заказа из бд по идентификатору
+     * @param id - идентификатор заказа
+     */
     @Override
     public Order selectOrderById(int id) {
         return orderMapper.findById(id);
     }
 
+    /**
+     * Метод реализующий выбор всех элементов из базы данных
+     */
     @Override
     public List<Order> selectAll() {
         return orderMapper.findAll();
     }
 
+    /**
+     * Метод реализуюший операцию обновления
+     * @param order - заказ который необходимо обновить
+     */
     @Override
     @Transactional
     public Order update(Order order) {
@@ -57,6 +76,10 @@ public class OrderRepository implements Repository{
         return order;
     }
 
+    /**
+     * Метод реализуюший операцию удаления
+     * @param id - идентификатор заказа
+     */
     @Override
     @Transactional
     public void deleteOrderById(int id) {

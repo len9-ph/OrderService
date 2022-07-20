@@ -4,6 +4,9 @@ import com.lgadetsky.orderservice.model.Order;
 
 import java.util.List;
 
+/**
+ * @author Leonid Gadetsky
+ */
 public interface Service {
     Order create(Order order);
     Order findById(int id);

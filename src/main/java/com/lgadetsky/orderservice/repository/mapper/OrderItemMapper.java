@@ -4,6 +4,12 @@ import com.lgadetsky.orderservice.model.OrderItem;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+
+/**
+ * Маппер отвечающий за маппинг сущности OrderItem
+ * @author Leonid Gadetsky
+ * @see OrderItem
+ */
 @Mapper
 public interface OrderItemMapper {
     void insertOrderItems(List<OrderItem> items);

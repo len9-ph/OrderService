@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+/**
+ * @author Leonid Gadetsky
+ */
 @org.springframework.stereotype.Service
 public class OrderService implements Service{
     private final OrderRepository orderRepository;
