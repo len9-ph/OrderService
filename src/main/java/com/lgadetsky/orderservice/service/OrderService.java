@@ -13,7 +13,6 @@ import java.util.List;
 public class OrderService implements Service{
     private final OrderRepository orderRepository;
 
-    @Autowired
     public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }

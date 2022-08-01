@@ -5,10 +5,8 @@ import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.OrderItem;
 import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
 import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,7 +19,7 @@ public class OrderRepository implements Repository{
 
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
-    @Autowired
+    
     public OrderRepository(OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
         this.orderMapper = orderMapper;
         this.orderItemMapper = orderItemMapper;
