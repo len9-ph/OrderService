@@ -1,6 +1,7 @@
 package com.lgadetsky.orderservice.exception;
 
 /**
+ * Сериализация
  * @author Leonid Gadetsky
  * Исключение для ситуации, когда в базе данных отсутсвует пользователь с заданным идентификатором
  */

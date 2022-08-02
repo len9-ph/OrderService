@@ -2,7 +2,6 @@ package com.lgadetsky.orderservice.service;
 
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
