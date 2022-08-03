@@ -38,8 +38,10 @@ public class ServletController extends HttpServlet{
         processRequest(req, resp);
         
 		/* InputStream is = req.getInputStream(); */
+        //Получаем id заказа из параметров запроса 
         int id = Integer.parseInt(req.getParameter("id"));
         System.out.print(true);
+        //Строим xml файл по полученному из базы pojo классу отображающему нужный заказ
         try {
         	JAXBContext jaxbContent = JAXBContext.newInstance(Order.class);
             Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
