@@ -58,11 +58,28 @@
             <version>1.6.9</version>
         </dependency>
 
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
-        </dependency>
+        <!-- API -->
+		<dependency>
+    		<groupId>jakarta.xml.bind</groupId>
+    		<artifactId>jakarta.xml.bind-api</artifactId>
+    		<version>2.3.3</version>
+		</dependency>
+
+<!-- Runtime -->
+		<dependency>
+   			<groupId>com.sun.xml.bind</groupId>
+    		<artifactId>jaxb-impl</artifactId>
+    		<version>2.3.3</version>
+    		<scope>runtime</scope>
+		</dependency>
+
+<!-- Alternative runtime -->
+		<dependency>
+    		<groupId>org.glassfish.jaxb</groupId>
+    		<artifactId>jaxb-runtime</artifactId>
+    		<version>2.3.3</version>
+    		<scope>runtime</scope>
+		</dependency>
     </dependencies>
 
     <build>

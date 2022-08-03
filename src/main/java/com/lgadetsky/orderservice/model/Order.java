@@ -34,7 +34,7 @@ public class Order {
     @Schema(description = "Комментарий заказчика", example = "Перезвоните")
     private String customerComment;
 	@XmlElementWrapper(name = "items")
-	@XmlElement(name = "item")
+	@XmlElement(name = "item", type = OrderItem.class)
     @Schema(description = "Список предметов в заказе")
     private List<OrderItem> orderItems;
 }

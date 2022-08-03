@@ -1,28 +1,30 @@
 package com.lgadetsky.orderservice.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.LinkedList;
-
+import java.io.InputStream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
-import com.lgadetsky.orderservice.service.OrderService;
-import com.lgadetsky.orderservice.model.*;;
+import com.lgadetsky.orderservice.model.Order;
+import com.lgadetsky.orderservice.service.OrderService;;
 
 @WebServlet(value = "/servlet")
 public class ServletController extends HttpServlet{
-    private final OrderService orderService;
+    
+	private final OrderService orderService;
 
     public ServletController(OrderService orderService) {
         this.orderService = orderService;
     }
 
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp) {
-        resp.setContentType("text/html");
+        resp.setContentType("application/xml");
     }
 
     @Override
@@ -33,33 +35,22 @@ public class ServletController extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	
-    	
         processRequest(req, resp);
-        if(req.getParameter("id") != null) {
-            //Выполняется получение пользователя по id
-            Order order = orderService.findById(Integer.parseInt(req.getParameter("id")));
-            PrintWriter writer = resp.getWriter();
-            writer.println(req.getContentType());
-
-            try{
-                writer.println("<h2>id: " + order.getId() + "</h2>");
-                writer.println("<h2>order status id: " + order.getOrderStatusId() + "</h2>");
-                writer.println("<h2>Customer name: " + order.getCustomerName() + "</h2>");
-                writer.println("<h2>Customer phone: " + order.getCustomerPhone() + "</h2>");
-                writer.println("<h2>Customer comment: " + order.getCustomerComment() + "</h2>");
-                LinkedList<OrderItem> items = (LinkedList<OrderItem>) order.getOrderItems();
-                writer.println("<h2>Items:");
-                for(OrderItem x : items)
-                    writer.println(x.toString());
-                writer.println("</h2>");
-            } finally {
-                writer.close();
-            }
+        
+		/* InputStream is = req.getInputStream(); */
+        int id = Integer.parseInt(req.getParameter("id"));
+        System.out.print(true);
+        try {
+        	JAXBContext jaxbContent = JAXBContext.newInstance(Order.class);
+            Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.marshal(orderService.findById(id), System.out);
         }
-        else{
-            //Выполняется получение всех пользователей
-
+        catch(JAXBException e) {
+        	e.printStackTrace();
         }
+        
+        
     }
 
     @Override
