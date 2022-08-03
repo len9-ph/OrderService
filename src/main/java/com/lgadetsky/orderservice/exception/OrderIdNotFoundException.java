@@ -6,7 +6,8 @@ package com.lgadetsky.orderservice.exception;
  * Исключение для ситуации, когда в базе данных отсутсвует пользователь с заданным идентификатором
  */
 public class OrderIdNotFoundException extends RuntimeException{
-    public OrderIdNotFoundException() {
+
+	public OrderIdNotFoundException() {
         super("Order Id not found");
     }
 }

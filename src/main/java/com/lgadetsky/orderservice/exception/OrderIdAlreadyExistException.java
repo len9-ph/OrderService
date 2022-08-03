@@ -5,7 +5,8 @@ package com.lgadetsky.orderservice.exception;
  * Исключение для ситуации, когда в базе уже существует пользователь с переданным идентификатором
  */
 public class OrderIdAlreadyExistException extends RuntimeException{
-    public OrderIdAlreadyExistException() {
+
+	public OrderIdAlreadyExistException() {
         super("Order Id already exist");
     }
 }

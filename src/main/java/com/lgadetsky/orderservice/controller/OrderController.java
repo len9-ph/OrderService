@@ -38,6 +38,7 @@ public class OrderController {
     )
     Order readById(@PathVariable int id) {
         Order order = orderService.findById(id);
+        System.out.print("read");
         if (order == null) {
             throw new OrderIdNotFoundException();
         }

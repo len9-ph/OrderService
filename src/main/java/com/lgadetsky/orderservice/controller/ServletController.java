@@ -32,12 +32,14 @@ public class ServletController extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	
+    	
         processRequest(req, resp);
-
         if(req.getParameter("id") != null) {
             //Выполняется получение пользователя по id
             Order order = orderService.findById(Integer.parseInt(req.getParameter("id")));
             PrintWriter writer = resp.getWriter();
+            writer.println(req.getContentType());
 
             try{
                 writer.println("<h2>id: " + order.getId() + "</h2>");
@@ -49,7 +51,7 @@ public class ServletController extends HttpServlet{
                 writer.println("<h2>Items:");
                 for(OrderItem x : items)
                     writer.println(x.toString());
-                writer.println("</h2>"); 
+                writer.println("</h2>");
             } finally {
                 writer.close();
             }

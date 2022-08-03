@@ -5,7 +5,8 @@ package com.lgadetsky.orderservice.exception;
  * Исключение для ситуации, когда в базе данных отсутсвуют записи
  */
 public class OrderDataBaseEmptyException extends RuntimeException{
-    public OrderDataBaseEmptyException() {
+    
+	public OrderDataBaseEmptyException() {
         super("Data Base empty");
     }
 }
