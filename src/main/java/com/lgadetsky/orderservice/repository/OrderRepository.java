@@ -7,6 +7,7 @@ import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
 import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -86,6 +87,15 @@ public class OrderRepository implements Repository{
     @Override
     @Transactional
     public void deleteOrderById(int id) {
+    	
+    	List<OrderItem> items = orderMapper.findById(id).getOrderItems();
+    	List<Integer> ids = new LinkedList<Integer>();
+    	
+    	for (OrderItem item : items) {
+    		ids.add(item.getId());
+    	}
+    	
+    	orderItemMapper.delete(ids);
         orderMapper.deleteById(id);
     }
 }

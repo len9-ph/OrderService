@@ -54,7 +54,6 @@
 
     <delete id="deleteById"
             parameterType="int">
-        delete from order_item where order_id = #{id};
         delete from "order" where id = #{id};
     </delete>
 </mapper>
