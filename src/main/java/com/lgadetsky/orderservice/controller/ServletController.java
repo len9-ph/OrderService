@@ -2,6 +2,8 @@ package com.lgadetsky.orderservice.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,13 +42,13 @@ public class ServletController extends HttpServlet{
 		/* InputStream is = req.getInputStream(); */
         //Получаем id заказа из параметров запроса 
         int id = Integer.parseInt(req.getParameter("id"));
-        System.out.print(true);
         //Строим xml файл по полученному из базы pojo классу отображающему нужный заказ
         try {
+        	PrintWriter out = resp.getWriter();
         	JAXBContext jaxbContent = JAXBContext.newInstance(Order.class);
             Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(orderService.findById(id), System.out);
+            jaxbMarshaller.marshal(orderService.findById(id), out);
         }
         catch(JAXBException e) {
         	e.printStackTrace();

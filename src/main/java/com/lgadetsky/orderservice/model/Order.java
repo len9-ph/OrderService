@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Data
 @NoArgsConstructor
@@ -19,6 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Schema(description = "Сущность заказа")
 public class Order {
+	@XmlTransient
     @Schema(description = "Идентификатор заказа", example = "1000")
     private int id;
 	@XmlElement(name = "orderStatusId")
