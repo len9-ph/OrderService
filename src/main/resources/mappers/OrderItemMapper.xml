@@ -40,11 +40,12 @@
             where noi.id = oi.id
     </update>-->
 
-    <delete id="delete"
+    <delete id="deleteByOrderId"
             parameterType="int">
-        delete from order_item where id in
-        <foreach collection="itemIds" item="id" open="(" separator=", " close=")">
+        delete from order_item where order_id = #{id};
+        <!--  delete from order_item where id in
+        <foreach collection="itemIds" item="id" separator=";">
             #{id}
-        </foreach>
+        </foreach>-->
     </delete>
 </mapper>

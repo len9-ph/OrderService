@@ -15,5 +15,5 @@ public interface OrderItemMapper {
     void insertOrderItems(List<OrderItem> items);
     List<OrderItem> findItemsByOrderId(int id);
     void update(List<OrderItem> items);
-    void delete(List<Integer> itemIds);
+    void deleteByOrderId(int id);
 }

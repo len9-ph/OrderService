@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Schema(description = "Сущность заказа")
 public class Order {
-	@XmlTransient
+	@XmlElement
     @Schema(description = "Идентификатор заказа", example = "1000")
     private int id;
 	@XmlElement(name = "orderStatusId")

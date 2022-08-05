@@ -32,17 +32,12 @@ public class ServletController extends HttpServlet {
 		resp.setContentType("application/xml");
 	}
 
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		processRequest(req, resp);
 
-		/* InputStream is = req.getInputStream(); */
 		// Получаем id заказа из параметров запроса
 		int id = Integer.parseInt(req.getParameter("id"));
 		// Строим xml файл по полученному из базы pojo классу отображающему нужный заказ
@@ -99,10 +94,4 @@ public class ServletController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-	}
-
 }

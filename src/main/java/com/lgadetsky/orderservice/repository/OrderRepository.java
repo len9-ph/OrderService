@@ -87,15 +87,16 @@ public class OrderRepository implements Repository{
     @Override
     @Transactional
     public void deleteOrderById(int id) {
-    	
-    	List<OrderItem> items = orderMapper.findById(id).getOrderItems();
-    	List<Integer> ids = new LinkedList<Integer>();
-    	
-    	for (OrderItem item : items) {
-    		ids.add(item.getId());
-    	}
-    	
-    	orderItemMapper.delete(ids);
+//    	
+//    	List<OrderItem> items = orderMapper.findById(id).getOrderItems();
+//    	List<Integer> ids = new LinkedList<Integer>();
+//    	
+//    	for (OrderItem item : items) {
+//    		ids.add(item.getId());
+//    	}
+//    	
+//    	orderItemMapper.delete(ids);
+    	orderItemMapper.deleteByOrderId(id);
         orderMapper.deleteById(id);
     }
 }
