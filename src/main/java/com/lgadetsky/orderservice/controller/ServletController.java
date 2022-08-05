@@ -74,20 +74,30 @@ public class ServletController extends HttpServlet {
 			MessageDTO mes = (MessageDTO) jaxbUnmarshaller.unmarshal(is);
 
 			PrintWriter out = resp.getWriter();
-			out.print(mes);
+			resp.setContentType("text/html");
+//			out.print(mes);
+//			mes.getBody().getOrder().getId();
 
 			switch (mes.getCommand()) {
-			case ("create"):
+			case ("create"):{
 				orderService.create(mes.getBody().getOrder());
+			
+				out.println("<h3>New order successfully created</h3>");
 				break;
-
-			case ("update"):
+			}
+			case ("update"):{
 				orderService.update(mes.getBody().getOrder());
+				
+				out.println("<h3>Order successfully updated</h3>");
 				break;
+			}
 
-			case ("delete"):
+			case ("delete"):{
 				orderService.deleteById(mes.getBody().getOrder().getId());
+				
+				out.println("<h3>Order successfully deleted</h3>");
 				break;
+			}
 			}
 
 		} catch (JAXBException e) {
