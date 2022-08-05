@@ -11,6 +11,6 @@ public interface Service {
     Order create(Order order);
     Order findById(int id);
     List<Order> findAll();
-    Order update(Order order);
+    Order update(int id, Order order);
     void deleteById(int id);
 }

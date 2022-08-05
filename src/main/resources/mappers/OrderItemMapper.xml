@@ -25,27 +25,13 @@
     		parameterType="com.lgadetsky.orderservice.model.OrderItem">
     		
     		<foreach collection="items" item="item" separator=";">
-    			update order_item set item_name=#{item.itemName} where id = #{item.id};
+    			update order_item set item_name=#{item.itemName} 
+    			where id = #{item.id};
     		</foreach>
     </update>
-    <!--  
-    <update id="update"
-            parameterType="com.lgadetsky.orderservice.model.OrderItem">
-        update order_item as oi set
-                                    item_name = noi.item_name
-        from (values
-            <foreach collection="items" item="o" separator=", ">
-                (#{o.id}, #{o.item_Name})
-            </foreach> ) as noi(id, item_name)
-            where noi.id = oi.id
-    </update>-->
 
     <delete id="deleteByOrderId"
             parameterType="int">
         delete from order_item where order_id = #{id};
-        <!--  delete from order_item where id in
-        <foreach collection="itemIds" item="id" separator=";">
-            #{id}
-        </foreach>-->
     </delete>
 </mapper>

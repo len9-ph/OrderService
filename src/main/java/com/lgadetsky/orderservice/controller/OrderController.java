@@ -63,7 +63,7 @@ public class OrderController {
     )
     Order update(@PathVariable int id, @RequestBody Order order) {
         order.setId(id);
-        return orderService.update(order);
+        return orderService.update(id, order);
     }
 
     @DeleteMapping("/order/{id}")

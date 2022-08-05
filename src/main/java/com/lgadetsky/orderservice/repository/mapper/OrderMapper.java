@@ -15,6 +15,6 @@ public interface OrderMapper {
     void insert(Order order);
     Order findById(int id);
     List<Order> findAll();
-    void update(Order order);
+    void update(Order order, int id);
     void deleteById(int id);
 }

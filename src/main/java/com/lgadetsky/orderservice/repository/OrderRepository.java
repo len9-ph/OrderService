@@ -1,14 +1,14 @@
 package com.lgadetsky.orderservice.repository;
 
+import java.util.List;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import com.lgadetsky.orderservice.exception.OrderIdNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.OrderItem;
 import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
 import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.LinkedList;
-import java.util.List;
 
 
 /**
@@ -66,13 +66,13 @@ public class OrderRepository implements Repository{
      */
     @Override
     @Transactional
-    public Order update(Order order) {
-        if(orderMapper.findById(order.getId()) != null){
+    public Order update(int id, Order order) {
+        if(orderMapper.findById(id) != null){
             //Order oldOlder = orderMapper.findById(order.getId());
 
             //orderItemMapper.update(order.getOrderItems());
-            orderMapper.update(order);
-            orderItemMapper.insertOrderItems(order.getOrderItems());
+            orderMapper.update(order, id);
+            orderItemMapper.update(order.getOrderItems(), id);
 
         } else {
             throw new OrderIdNotFoundException();

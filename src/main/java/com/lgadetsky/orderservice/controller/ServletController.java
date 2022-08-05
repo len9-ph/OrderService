@@ -16,7 +16,6 @@ import javax.xml.bind.Unmarshaller;
 
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.dto.MessageDTO;
-import com.lgadetsky.orderservice.model.dto.OrderDTO;
 import com.lgadetsky.orderservice.service.OrderService;;
 
 @WebServlet(value = "/servlet")
@@ -28,38 +27,24 @@ public class ServletController extends HttpServlet {
 		this.orderService = orderService;
 	}
 
-	protected void processRequest(HttpServletRequest req, HttpServletResponse resp) {
-		resp.setContentType("application/xml");
-	}
-
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		processRequest(req, resp);
-
+		resp.setContentType("application/xml");
+		
 		// Получаем id заказа из параметров запроса
+		
 		int id = Integer.parseInt(req.getParameter("id"));
 		// Строим xml файл по полученному из базы pojo классу отображающему нужный заказ
 		try {
-			/*
-			 * PrintWriter out = resp.getWriter(); JAXBContext jaxbContent =
-			 * JAXBContext.newInstance(MessageDTO.class); Marshaller jaxbMarshaller =
-			 * jaxbContent.createMarshaller();
-			 * jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			 * MessageDTO mes = new MessageDTO(); mes.setCommand("test"); mes.setBody(new
-			 * OrderDTO(orderService.findById(id)));
-			 * 
-			 * jaxbMarshaller.marshal(mes, out);
-			 */
 
-			
 			 PrintWriter out = resp.getWriter(); 
 			 JAXBContext jaxbContent = JAXBContext.newInstance(Order.class); 
 			 Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
 			 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			 jaxbMarshaller.marshal(orderService.findById(id), out);
-			 } catch (JAXBException e) {
+			 } 
+		catch (JAXBException e) {
 			e.printStackTrace();
 		}
 
@@ -75,27 +60,31 @@ public class ServletController extends HttpServlet {
 
 			PrintWriter out = resp.getWriter();
 			resp.setContentType("text/html");
-//			out.print(mes);
-//			mes.getBody().getOrder().getId();
 
 			switch (mes.getCommand()) {
 			case ("create"):{
 				orderService.create(mes.getBody().getOrder());
 			
-				out.println("<h3>New order successfully created</h3>");
+				out.println("<html>"
+						+ "<h3>New order successfully created</h3> "
+						+ "</html>");
 				break;
 			}
 			case ("update"):{
-				orderService.update(mes.getBody().getOrder());
+				orderService.update(mes.getBody().getOrder().getId() ,mes.getBody().getOrder());
 				
-				out.println("<h3>Order successfully updated</h3>");
+				out.println("<html>"
+						+ "<h3>Order successfully updated</h3>"
+						+ "</html>");
 				break;
 			}
 
 			case ("delete"):{
 				orderService.deleteById(mes.getBody().getOrder().getId());
 				
-				out.println("<h3>Order successfully deleted</h3>");
+				out.println("<html>"
+						+ "<h3>Order successfully deleted</h3>"
+						+ "</html>");
 				break;
 			}
 			}

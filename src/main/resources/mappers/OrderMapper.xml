@@ -41,9 +41,7 @@
     </select>
 
     <update id="update"
-            parameterType="com.lgadetsky.orderservice.model.Order"
-            flushCache="true"
-            timeout="20">
+            parameterType="com.lgadetsky.orderservice.model.Order">
         update "order" set
                         order_status_id = #{orderStatusId},
                         customer_name = #{customerName},
