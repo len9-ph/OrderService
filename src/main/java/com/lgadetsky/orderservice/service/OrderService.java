@@ -1,43 +1,100 @@
 package com.lgadetsky.orderservice.service;
 
 import com.lgadetsky.orderservice.model.Order;
-import com.lgadetsky.orderservice.repository.OrderRepository;
+import com.lgadetsky.orderservice.model.OrderItem;
+import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
+import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
 
 import java.util.List;
+
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Leonid Gadetsky
  */
 @org.springframework.stereotype.Service
 public class OrderService implements Service{
-    private final OrderRepository orderRepository;
+	
+	private final OrderMapper orderMapper;
+	private final OrderItemMapper orderItemMapper;
+	
+	public OrderService(OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
+		this.orderMapper = orderMapper;
+		this.orderItemMapper = orderItemMapper;
+	}
 
-    public OrderService(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
+	@Override
+	@Transactional
+	public Order create(Order order) {
+		orderMapper.insert(order);
+		
+		List<OrderItem> items = order.getOrderItems();
+		if(items != null && !items.isEmpty()) {
+			items.forEach(item -> item.setOrderId(order.getId()));
+			orderItemMapper.insertOrderItems(items);
+		}
+		return order;
+	}
 
-    @Override
-    public Order create(Order order) {
-        return orderRepository.create(order);
-    }
+	@Override
+	public Order findById(int id) {
+		return orderMapper.findById(id);
+	}
 
-    @Override
-    public Order findById(int id) {
-        return orderRepository.selectOrderById(id);
-    }
+	@Override
+	public List<Order> findAll() {
+		return orderMapper.findAll();
+	}
+	
+	
+	@Override
+	@Transactional
+	public Order update(Order order) {
+		orderMapper.update(order);
+		
+		List<OrderItem> items = order.getOrderItems();
+		items.forEach(item -> item.setOrderId(order.getId()));
+		orderItemMapper.deleteByOrderId(order.getId());
+		orderItemMapper.insertOrderItems(items);
+		return order;
+	}
 
-    @Override
-    public List<Order> findAll() {
-        return orderRepository.selectAll();
-    }
-
-    @Override
-    public Order update(Order order) {
-        return orderRepository.update(order);
-    }
-
-    @Override
-    public void deleteById(int id) {
-        orderRepository.deleteOrderById(id);
-    }
+	@Override
+	@Transactional
+	public void deleteById(int id) {
+		orderItemMapper.deleteByOrderId(id);
+		orderMapper.deleteById(id);
+	}
+	
+	
+//    private final OrderRepository orderRepository;
+//
+//    public OrderService(OrderRepository orderRepository) {
+//        this.orderRepository = orderRepository;
+//    }
+//
+//    @Override
+//    public Order create(Order order) {
+//        return orderRepository.create(order);
+//    }
+//
+//    @Override
+//    public Order findById(int id) {
+//        return orderRepository.selectOrderById(id);
+//    }
+//
+//    @Override
+//    public List<Order> findAll() {
+//        return orderRepository.selectAll();
+//    }
+//
+//    @Override
+//    public Order update(Order order) {
+//        return orderRepository.update(order);
+//    }
+//
+//    @Override
+//    public void deleteById(int id) {
+//        orderRepository.deleteOrderById(id);
+//    }
 }
