@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Schema(description = "Сущность сессии пользователя")
-public class OrderSession {
+public class Session {
 	@Schema(description = "Счетчик сессий", example = "1000")
 	private int id;
 	@Schema(description = "Уникальный идентификатор сессии", example = "1234-AAFF-BB55-DD22")
