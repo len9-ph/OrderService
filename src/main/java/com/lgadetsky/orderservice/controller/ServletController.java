@@ -72,8 +72,8 @@ public class ServletController extends HttpServlet {
 			}
 			case ("update"):{
 			
-				int id = Integer.parseInt(req.getParameter("id"));
-				orderService.update(id ,mes.getBody().getOrder());
+				//int id = Integer.parseInt(req.getParameter("id"));
+				orderService.update(mes.getBody().getOrder());
 				
 				out.println("<html>"
 						+ "<h3>Order successfully updated</h3>"

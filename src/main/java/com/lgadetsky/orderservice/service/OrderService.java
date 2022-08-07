@@ -32,8 +32,8 @@ public class OrderService implements Service{
     }
 
     @Override
-    public Order update(int id, Order order) {
-        return orderRepository.update(id, order);
+    public Order update(Order order) {
+        return orderRepository.update(order);
     }
 
     @Override

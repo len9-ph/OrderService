@@ -66,17 +66,9 @@ public class OrderRepository implements Repository{
      */
     @Override
     @Transactional
-    public Order update(int id, Order order) {
-        if(orderMapper.findById(id) != null){
-            //Order oldOlder = orderMapper.findById(order.getId());
-
-            //orderItemMapper.update(order.getOrderItems());
-            orderMapper.update(order, id);
-            orderItemMapper.update(order.getOrderItems(), id);
-
-        } else {
-            throw new OrderIdNotFoundException();
-        }
+    public Order update(Order order) {
+        orderMapper.update(order);
+        orderItemMapper.update(order.getOrderItems());
         return order;
     }
 
@@ -87,15 +79,6 @@ public class OrderRepository implements Repository{
     @Override
     @Transactional
     public void deleteOrderById(int id) {
-//    	
-//    	List<OrderItem> items = orderMapper.findById(id).getOrderItems();
-//    	List<Integer> ids = new LinkedList<Integer>();
-//    	
-//    	for (OrderItem item : items) {
-//    		ids.add(item.getId());
-//    	}
-//    	
-//    	orderItemMapper.delete(ids);
     	orderItemMapper.deleteByOrderId(id);
         orderMapper.deleteById(id);
     }
