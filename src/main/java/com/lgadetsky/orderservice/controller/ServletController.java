@@ -20,7 +20,7 @@ import com.lgadetsky.orderservice.service.OrderService;;
 
 @WebServlet(value = "/servlet")
 public class ServletController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8024790167396194706L;
 	
 	private final OrderService orderService;
 
