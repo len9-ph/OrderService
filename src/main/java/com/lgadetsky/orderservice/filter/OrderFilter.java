@@ -38,22 +38,24 @@ public class OrderFilter implements Filter{
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		if(sessionService.findById(request.getParameter("session-id")) != null) {
-			Session session = sessionService.findById(request.getParameter("session-id"));
-			response.getWriter().println("start:" + session.getStartTime().getTime());
-			response.getWriter().println("now:" + new Date().getTime());
-			response.getWriter().println(session.getTimeoutMinutes());
-			if(isTimeValid(session))
-				chain.doFilter(request, response);
+		
+		String sessionId = request.getParameter("session-id");
+		if (sessionId != null) {
+			Session session = sessionService.findById(sessionId);
+			if (session != null) 
+				if (isSessionValid(session))
+					chain.doFilter(request, response);
+				else
+					response.getWriter().println("Session expired");
 			else 
-				response.getWriter().print("Session expired");
+				response.getWriter().println("Unknown session");
 		}
 		else
-			response.getWriter().print("Unknown session");
+			response.getWriter().println("Invalid session");
 		
 	}
 	
-	private boolean isTimeValid(Session session) {
+	private boolean isSessionValid(Session session) {
 		return (new Date().getTime() - session.getStartTime().getTime()) < (session.getTimeoutMinutes() * 60000);
 	}
 	
