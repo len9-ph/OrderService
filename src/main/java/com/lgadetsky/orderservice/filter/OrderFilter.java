@@ -40,6 +40,9 @@ public class OrderFilter implements Filter{
 			throws IOException, ServletException {
 		if(sessionService.findById(request.getParameter("session-id")) != null) {
 			Session session = sessionService.findById(request.getParameter("session-id"));
+			response.getWriter().println("start:" + session.getStartTime().getTime());
+			response.getWriter().println("now:" + new Date().getTime());
+			response.getWriter().println(session.getTimeoutMinutes());
 			if(isTimeValid(session))
 				chain.doFilter(request, response);
 			else 
@@ -51,7 +54,7 @@ public class OrderFilter implements Filter{
 	}
 	
 	private boolean isTimeValid(Session session) {
-		return (new Date().getTime() - session.getStartTime().getTime()) > session.getTimeoutMinutes()  ;
+		return (new Date().getTime() - session.getStartTime().getTime()) < (session.getTimeoutMinutes() * 60000);
 	}
 	
 	
