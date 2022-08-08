@@ -1,5 +1,6 @@
 package com.lgadetsky.orderservice.service;
 
+import com.lgadetsky.orderservice.exception.OrderIdNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.OrderItem;
 import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
@@ -49,13 +50,18 @@ public class OrderService implements Service<Order, Integer>{
 	@Override
 	@Transactional
 	public Order update(Order order) {
-		orderMapper.update(order);
 		
-		List<OrderItem> items = order.getOrderItems();
-		items.forEach(item -> item.setOrderId(order.getId()));
-		orderItemMapper.deleteByOrderId(order.getId());
-		orderItemMapper.insertOrderItems(items);
-		return order;
+		if (orderMapper.findById(order.getId()) != null) {
+			orderMapper.update(order);
+			List<OrderItem> items = order.getOrderItems();
+			items.forEach(item -> item.setOrderId(order.getId()));
+			orderItemMapper.deleteByOrderId(order.getId());
+			orderItemMapper.insertOrderItems(items);
+			return order;
+		}
+		else {
+			throw new OrderIdNotFoundException(); 
+		}
 	}
 
 	@Override
