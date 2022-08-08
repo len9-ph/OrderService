@@ -10,6 +10,7 @@ import com.lgadetsky.orderservice.repository.mapper.SessionMapper;
  * @author Leonid Gadetsky
  *
  */
+@org.springframework.stereotype.Service
 public class SessionService implements Service<Session, String> {
 	
 	private final SessionMapper sessionMapper;
