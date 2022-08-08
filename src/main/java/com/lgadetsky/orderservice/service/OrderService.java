@@ -65,36 +65,4 @@ public class OrderService implements Service{
 		orderItemMapper.deleteByOrderId(id);
 		orderMapper.deleteById(id);
 	}
-	
-	
-//    private final OrderRepository orderRepository;
-//
-//    public OrderService(OrderRepository orderRepository) {
-//        this.orderRepository = orderRepository;
-//    }
-//
-//    @Override
-//    public Order create(Order order) {
-//        return orderRepository.create(order);
-//    }
-//
-//    @Override
-//    public Order findById(int id) {
-//        return orderRepository.selectOrderById(id);
-//    }
-//
-//    @Override
-//    public List<Order> findAll() {
-//        return orderRepository.selectAll();
-//    }
-//
-//    @Override
-//    public Order update(Order order) {
-//        return orderRepository.update(order);
-//    }
-//
-//    @Override
-//    public void deleteById(int id) {
-//        orderRepository.deleteOrderById(id);
-//    }
 }
