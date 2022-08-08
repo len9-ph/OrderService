@@ -15,12 +15,28 @@
 			parameterType="com.lgadetsky.orderservice.model.Session"
 			useGeneratedKeys="true"
             keyProperty="id">
-	
+    	inser into "session" (ID, SESSION_ID, START_TIME, TIMEOUT_MINUTES)
+    	values (NEXTVAL('session_seq'), #{sessionId}, #{startTime}, #{timeoutMinutes});
 	</insert>
 	
 	<select id="findBySessionId"
 			parameterType="string"
 			resultMap="sessionResultMap">
-				
+		select * from "session"
+		where session_id = #{sessionId}
 	</select>
+	
+	<update id="update"
+			parameterType="com.lgadetsky.orderservice.model.Session">
+		update "session" set
+							id = #{id},
+							start_time = #{startTime}
+							timeout_minutes = #{timeoutMinutes}
+							where session_id = ${sessionId};	
+	</update>
+	
+	<delete id="deleteBySessionId"
+			parameterType="string">
+		delete from "session" where session_id = #{sessionId};
+	</delete>
 </mapper>

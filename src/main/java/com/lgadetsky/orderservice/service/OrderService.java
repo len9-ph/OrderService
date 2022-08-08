@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Leonid Gadetsky
  */
 @org.springframework.stereotype.Service
-public class OrderService implements Service{
+public class OrderService implements Service<Order, Integer>{
 	
 	private final OrderMapper orderMapper;
 	private final OrderItemMapper orderItemMapper;
@@ -37,11 +37,10 @@ public class OrderService implements Service{
 	}
 
 	@Override
-	public Order findById(int id) {
+	public Order findById(Integer id) {
 		return orderMapper.findById(id);
 	}
 
-	@Override
 	public List<Order> findAll() {
 		return orderMapper.findAll();
 	}
@@ -61,7 +60,7 @@ public class OrderService implements Service{
 
 	@Override
 	@Transactional
-	public void deleteById(int id) {
+	public void deleteById(Integer id) {
 		orderItemMapper.deleteByOrderId(id);
 		orderMapper.deleteById(id);
 	}

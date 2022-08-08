@@ -13,6 +13,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
+import com.lgadetsky.orderservice.service.SessionService;
+
 /**
  * @author Leonid Gadetsky
  *
@@ -20,6 +22,12 @@ import javax.servlet.annotation.WebFilter;
 @WebFilter(urlPatterns = "/servlet")
 public class OrderFilter implements Filter{
 	
+	private final SessionService sessionService;
+	
+	public OrderFilter(SessionService sessionService) {
+		this.sessionService = sessionService;
+	}
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		Filter.super.init(filterConfig);
