@@ -2,6 +2,8 @@ package com.lgadetsky.orderservice.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.service.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -34,27 +37,32 @@ public class OrderController {
             summary = "Request for adding a new Order",
             description = "Creates a new order with parameters are contained in the request body"
     )
-    @ApiResponses()
-    Order create(@RequestBody Order order) {
-        if(orderService.findById(order.getId()) == null){
-            return orderService.create(order);
-        }else {
-            throw new OrderIdAlreadyExistException();
-        }
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "A new order has been successfully created"),
+    		@ApiResponse(responseCode = "500", description = "Server error")
+    })
+    ResponseEntity<?> create(@RequestBody Order order) {
+    	orderService.create(order);
+    	return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/order/{id}")
     @Operation(
-            summary = "Получить пользователя по идентификатору"
+            summary = "Get the Order by id",
+            description = "Returns object by 'orderId' or returns null"
     )
-    Order readById(@PathVariable int id) {
-        Order order = orderService.findById(id);
-        System.out.print("read");
-        if (order == null) {
-            throw new OrderIdNotFoundException();
-        }
-        return order;
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "A successful response"),
+    		@ApiResponse(responseCode = "404", description = "A resource with requested ID not found"),
+    		@ApiResponse(responseCode = "500", description = "Server error")
+    })
+    ResponseEntity<?> readById(@PathVariable int id) {
+    	if (orderService.findById(id) != null)
+    		return new ResponseEntity<Order>(orderService.findById(id), HttpStatus.OK);
+    	else
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    
     @GetMapping("/order")
     @Operation(
             summary = "Получить всех пользователей"
@@ -70,19 +78,31 @@ public class OrderController {
 
     @PutMapping("/order/{id}")
     @Operation(
-            summary = "Обновление пользователя"
+            summary = "Request for editing the Order by id",
+            description = "Update order by id with parameters are contained in request body"
     )
-    Order update(@PathVariable int id, @RequestBody Order order) {
+    @ApiResponses(value = {
+    	@ApiResponse(responseCode = "200", description = "Order has been updated succesfully"),
+    	@ApiResponse(responseCode = "500", description = "Server error")
+    })
+    ResponseEntity<?> update(@PathVariable int id, @RequestBody Order order) {
         order.setId(id);
-        return orderService.update(order);
+        orderService.update(order);
+        return new ResponseEntity<Order>(order, HttpStatus.OK);
     }
 
     @DeleteMapping("/order/{id}")
     @Operation(
-            summary = "Удаление пользователя по идентификатору"
+            summary = "Request for removing the Order by id",
+            description = "Removes order by id"
     )
-    void deleteById(@PathVariable int id) {
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Order has been deleted succesfully"),
+        	@ApiResponse(responseCode = "500", description = "Server error")
+    })
+    ResponseEntity<?> deleteById(@PathVariable int id) {
         orderService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
