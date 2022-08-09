@@ -14,5 +14,7 @@ import java.util.List;
 public interface OrderItemMapper {
     void insertOrderItems(List<OrderItem> items);
     List<OrderItem> findItemsByOrderId(int id);
+    void update(OrderItem item);
+    void deleteById(int id);
     void deleteByOrderId(int id);
 }

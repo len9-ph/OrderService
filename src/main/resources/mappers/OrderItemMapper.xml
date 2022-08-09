@@ -20,7 +20,20 @@
             resultType="com.lgadetsky.orderservice.model.OrderItem">
         SELECT * from order_item where  order_id = #{id} order by id;
     </select>
-
+    
+    <update id="update"
+    		parameterType="com.lgadetsky.orderservice.model.OrderItem">
+    	update "order_item" set
+    						 item_name = #{itemName}
+    						where id = #{id};
+    </update>
+	
+	<delete id="deleteById"
+			parameterType="int">
+		delete from order_item where id = #{id};
+	
+	</delete>
+	
     <delete id="deleteByOrderId"
             parameterType="int">
         delete from order_item where order_id = #{id};

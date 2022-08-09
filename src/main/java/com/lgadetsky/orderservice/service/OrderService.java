@@ -50,18 +50,29 @@ public class OrderService implements Service<Order, Integer>{
 	@Override
 	@Transactional
 	public Order update(Order order) {
-		
-		if (orderMapper.findById(order.getId()) != null) {
+
+		if(orderMapper.findById(order.getId()) != null) {
+			List<OrderItem> oldOrderItems = orderMapper.findById(order.getId()).getOrderItems();
+			List<OrderItem> newOrderItems = order.getOrderItems();
+			
 			orderMapper.update(order);
-			List<OrderItem> items = order.getOrderItems();
-			items.forEach(item -> item.setOrderId(order.getId()));
-			orderItemMapper.deleteByOrderId(order.getId());
-			orderItemMapper.insertOrderItems(items);
+			
+			List<OrderItem> itemsToUpdate = newOrderItems;
+			itemsToUpdate.retainAll(oldOrderItems);
+			itemsToUpdate.forEach(item -> orderItemMapper.update(item));
+			
+			List<OrderItem> itemsToDelete = oldOrderItems;
+			itemsToDelete.removeAll(newOrderItems);
+			itemsToDelete.forEach(item -> orderItemMapper.deleteById(item.getId()));
+			
+			List<OrderItem> itemsToInsert = newOrderItems;
+			itemsToInsert.removeAll(oldOrderItems);
+			if (!itemsToInsert.isEmpty())
+				orderItemMapper.insertOrderItems(itemsToInsert);
+			
 			return order;
 		}
-		else {
-			throw new OrderIdNotFoundException(); 
-		}
+		else throw new OrderIdNotFoundException();
 	}
 
 	@Override

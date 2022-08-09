@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lgadetsky.orderservice.exception.OrderDataBaseEmptyException;
-import com.lgadetsky.orderservice.exception.OrderIdAlreadyExistException;
-import com.lgadetsky.orderservice.exception.OrderIdNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.service.OrderService;
 
