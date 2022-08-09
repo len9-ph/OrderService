@@ -15,7 +15,7 @@
         <result property="customerName" column="CUSTOMER_NAME"/>
         <result property="customerPhone" column="CUSTOMER_PHONE"/>
         <result property="customerComment" column="CUSTOMER_COMMENT"/>
-        <collection property="orderItems" resultMap="orderItemResultMap"/>
+        <collection property="orderItems" resultMap="orderItemResultMap" columnPrefix="oi_"/>
     </resultMap>
 
     <insert id="insert"
@@ -25,15 +25,24 @@
         insert into "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)
         values (NEXTVAL('order_seq'), #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment});
     </insert>
-
-    <select id="findById"
-            parameterType="int"
-            resultMap="orderResultMap">
-        select o.id, o.order_status_id, o.customer_name, o.customer_phone, o.customer_comment, oi.id, oi.order_id, oi.item_name
-        from "order" as o
-        join order_item oi on o.id = oi.order_id
-        where o.id = #{id};
-    </select>
+	
+	<select id="findById"
+			parameterType="int"
+			resultMap="orderResultMap">
+			
+		select
+			o.id,
+			o.order_status_id,
+			o.customer_name,
+			o.customer_phone,
+			o.customer_comment,
+			i.id as oi_id,
+			i.order_id as oi_order_id,
+			i.item_name as oi_item_name
+		from "order" o
+		join order_item i on o.id = i.order_id
+		where o.id = #{id}
+	</select>
 
     <select id="findAll"
             resultMap="orderResultMap">

@@ -1,18 +1,27 @@
 package com.lgadetsky.orderservice.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.lgadetsky.orderservice.exception.OrderDataBaseEmptyException;
 import com.lgadetsky.orderservice.exception.OrderIdAlreadyExistException;
 import com.lgadetsky.orderservice.exception.OrderIdNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.service.OrderService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@Tag(name = "OrderController", description = "Главный контроллер приложения")
+@Tag(name = "default", description = "Main controller")
 public class OrderController {
     private final OrderService orderService;
 
@@ -22,8 +31,10 @@ public class OrderController {
 
     @PostMapping("/order/{id}")
     @Operation(
-            summary = "Создание нового пользователя"
+            summary = "Request for adding a new Order",
+            description = "Creates a new order with parameters are contained in the request body"
     )
+    @ApiResponses()
     Order create(@RequestBody Order order) {
         if(orderService.findById(order.getId()) == null){
             return orderService.create(order);
