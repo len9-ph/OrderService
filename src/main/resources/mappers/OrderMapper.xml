@@ -44,11 +44,6 @@
 		where o.id = #{id}
 	</select>
 
-    <select id="findAll"
-            resultMap="orderResultMap">
-        select * from "order" join order_item oi on "order".id = oi.order_id;
-    </select>
-
     <update id="update"
             parameterType="com.lgadetsky.orderservice.model.Order">
         update "order" set

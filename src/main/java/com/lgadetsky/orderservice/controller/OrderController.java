@@ -1,7 +1,5 @@
 package com.lgadetsky.orderservice.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lgadetsky.orderservice.exception.OrderDataBaseEmptyException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.service.OrderService;
 
@@ -59,19 +56,6 @@ public class OrderController {
     		return new ResponseEntity<Order>(orderService.findById(id), HttpStatus.OK);
     	else
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    
-    @GetMapping("/order")
-    @Operation(
-            summary = "Получить всех пользователей"
-    )
-    List<Order> readAll() {
-        if(!orderService.findAll().isEmpty())
-            return orderService.findAll();
-        else {
-            throw new OrderDataBaseEmptyException();
-        }
-
     }
 
     @PutMapping("/order/{id}")

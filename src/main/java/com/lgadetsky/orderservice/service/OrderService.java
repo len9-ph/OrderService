@@ -42,10 +42,6 @@ public class OrderService implements Service<Order, Integer>{
 	public Order findById(Integer id) {
 		return orderMapper.findById(id);
 	}
-
-	public List<Order> findAll() {
-		return orderMapper.findAll();
-	}
 	
 	@Override
 	@Transactional

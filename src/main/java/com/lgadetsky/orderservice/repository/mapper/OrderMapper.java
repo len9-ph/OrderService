@@ -1,9 +1,8 @@
 package com.lgadetsky.orderservice.repository.mapper;
 
-import com.lgadetsky.orderservice.model.Order;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import com.lgadetsky.orderservice.model.Order;
 
 /**
  * Маппер отвечающий за маппинг сущности Order
@@ -14,7 +13,6 @@ import java.util.List;
 public interface OrderMapper {
     void insert(Order order);
     Order findById(int id);
-    List<Order> findAll();
     void update(Order order);
     void deleteById(int id);
 }
