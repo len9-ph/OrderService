@@ -27,7 +27,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/order/{id}")
+    @PostMapping("/order")
     @Operation(
             summary = "Request for adding a new Order",
             description = "Creates a new order with parameters are contained in the request body"
