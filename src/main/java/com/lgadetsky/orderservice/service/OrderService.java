@@ -6,6 +6,7 @@ import com.lgadetsky.orderservice.model.OrderItem;
 import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
 import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,6 @@ public class OrderService implements Service<Order, Integer>{
 		return orderMapper.findAll();
 	}
 	
-	
 	@Override
 	@Transactional
 	public Order update(Order order) {
@@ -54,21 +54,29 @@ public class OrderService implements Service<Order, Integer>{
 		if(orderMapper.findById(order.getId()) != null) {
 			List<OrderItem> oldOrderItems = orderMapper.findById(order.getId()).getOrderItems();
 			List<OrderItem> newOrderItems = order.getOrderItems();
+			List<OrderItem> toUpdate = new LinkedList<>();
+			List<OrderItem> toInsert = new LinkedList<>();
+			List<OrderItem> toDelete = new LinkedList<>();
 			
 			orderMapper.update(order);
 			
-			List<OrderItem> itemsToUpdate = newOrderItems;
-			itemsToUpdate.retainAll(oldOrderItems);
-			itemsToUpdate.forEach(item -> orderItemMapper.update(item));
-			
-			List<OrderItem> itemsToDelete = oldOrderItems;
-			itemsToDelete.removeAll(newOrderItems);
-			itemsToDelete.forEach(item -> orderItemMapper.deleteById(item.getId()));
-			
-			List<OrderItem> itemsToInsert = newOrderItems;
-			itemsToInsert.removeAll(oldOrderItems);
-			if (!itemsToInsert.isEmpty())
-				orderItemMapper.insertOrderItems(itemsToInsert);
+			for (OrderItem item : newOrderItems) {
+				if (oldOrderItems.contains(item))
+					toUpdate.add(item);
+				else if (item.getId() == 0) {
+					item.setOrderId(order.getId());
+					toInsert.add(item);
+				}
+			}
+			oldOrderItems.removeAll(toUpdate);			
+			toDelete = oldOrderItems;
+	
+			if (!toInsert.isEmpty())
+				orderItemMapper.insertOrderItems(toInsert);
+			if (!toDelete.isEmpty())
+				toDelete.forEach(item -> orderItemMapper.deleteById(item.getId()));
+			if(!toUpdate.isEmpty())
+				toUpdate.forEach(item -> orderItemMapper.update(item));
 			
 			return order;
 		}
