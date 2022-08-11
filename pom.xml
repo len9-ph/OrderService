@@ -17,28 +17,13 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
-    	 <!-- API -->
-		<dependency>
-    		<groupId>jakarta.xml.bind</groupId>
-    		<artifactId>jakarta.xml.bind-api</artifactId>
-    		<version>2.3.3</version>
-		</dependency>
-
-<!-- Runtime -->
 		<dependency>
    			<groupId>com.sun.xml.bind</groupId>
     		<artifactId>jaxb-impl</artifactId>
     		<version>2.3.3</version>
     		<scope>runtime</scope>
 		</dependency>
-
-<!-- Alternative runtime -->
-		<dependency>
-    		<groupId>org.glassfish.jaxb</groupId>
-    		<artifactId>jaxb-runtime</artifactId>
-    		<version>2.3.3</version>
-    		<scope>runtime</scope>
-		</dependency>
+		
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
