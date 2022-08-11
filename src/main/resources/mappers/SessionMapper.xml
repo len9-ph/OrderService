@@ -15,7 +15,7 @@
 			parameterType="com.lgadetsky.orderservice.model.Session"
 			useGeneratedKeys="true"
             keyProperty="id">
-    	inser into "session" (ID, SESSION_ID, START_TIME, TIMEOUT_MINUTES)
+    	insert into "session" (ID, SESSION_ID, START_TIME, TIMEOUT_MINUTES)
     	values (NEXTVAL('session_seq'), #{sessionId}, #{startTime}, #{timeoutMinutes});
 	</insert>
 	
