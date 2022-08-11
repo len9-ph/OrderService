@@ -4,6 +4,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
+import com.lgadetsky.orderservice.model.Order;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,9 +14,9 @@ import lombok.NoArgsConstructor;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BodyDTO {
 	@XmlElement(name = "order")
-	private OrderDTO order;
+	private Order order;
 	
-	public BodyDTO(OrderDTO order) {
+	public BodyDTO(Order order) {
 		this.order = order;
 	}
 }

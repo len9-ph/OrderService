@@ -27,6 +27,9 @@ public class Order {
 	
     @Schema(description = "Комментарий заказчика", example = "Перезвоните")
     private String customerComment;
+    
+    @Schema(description = "Список предметов заказа")
+    List<OrderItem> orderItems;
 	
 }
 
