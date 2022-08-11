@@ -2,9 +2,6 @@ package com.lgadetsky.orderservice.model.dto;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlValue;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,11 +9,12 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
+//@XmlRootElement(name = "items")
 public class ItemDTO {
-	@XmlTransient
+	//@XmlTransient
 	private int id;
-	@XmlTransient
+	//@XmlTransient
 	private int orderId;
-	@XmlValue
+	//@XmlValue
 	private String name;
 }
