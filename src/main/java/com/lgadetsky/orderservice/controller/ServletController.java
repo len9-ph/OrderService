@@ -14,8 +14,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.dto.MessageDTO;
+import com.lgadetsky.orderservice.model.dto.OrderDTO;
+import com.lgadetsky.orderservice.repository.mapper.Mapper;
 import com.lgadetsky.orderservice.service.OrderService;;
 
 @WebServlet(value = "/servlet")
@@ -23,10 +24,12 @@ public class ServletController extends HttpServlet {
 	private static final long serialVersionUID = 8024790167396194706L;
 	
 	private final OrderService orderService;
+    private final Mapper mapper;
 
-	public ServletController(OrderService orderService) {
-		this.orderService = orderService;
-	}
+    public ServletController(OrderService orderService, Mapper mapper) {
+        this.orderService = orderService;
+        this.mapper = mapper;
+    }
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,10 +43,10 @@ public class ServletController extends HttpServlet {
 		try {
 
 			 PrintWriter out = resp.getWriter(); 
-			 JAXBContext jaxbContent = JAXBContext.newInstance(Order.class); 
+			 JAXBContext jaxbContent = JAXBContext.newInstance(OrderDTO.class); 
 			 Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
 			 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			 jaxbMarshaller.marshal(orderService.findById(id), out);
+			 jaxbMarshaller.marshal(mapper.toDTO(orderService.findById(id)), out);
 			 } 
 		catch (JAXBException e) {
 			e.printStackTrace();
@@ -64,7 +67,7 @@ public class ServletController extends HttpServlet {
 
 			switch (mes.getCommand()) {
 			case ("create"):{
-				orderService.create(mes.getBody().getOrder());
+				orderService.create(mapper.toOrder(mes.getBody()));
 			
 				out.println("<html>"
 						+ "<h3>New order successfully created</h3> "
@@ -74,7 +77,7 @@ public class ServletController extends HttpServlet {
 			case ("update"):{
 			
 				//int id = Integer.parseInt(req.getParameter("id"));
-				orderService.update(mes.getBody().getOrder());
+				orderService.update(mapper.toOrder(mes.getBody()));
 				
 				out.println("<html>"
 						+ "<h3>Order successfully updated</h3>"
@@ -83,7 +86,7 @@ public class ServletController extends HttpServlet {
 			}
 
 			case ("delete"):{
-				orderService.deleteById(mes.getBody().getOrder().getId());
+				orderService.deleteById(mes.getBody().getId());
 				
 				out.println("<html>"
 						+ "<h3>Order successfully deleted</h3>"

@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lgadetsky.orderservice.model.Order;
+import com.lgadetsky.orderservice.model.dto.OrderDTO;
+import com.lgadetsky.orderservice.repository.mapper.Mapper;
 import com.lgadetsky.orderservice.service.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,9 +23,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "default", description = "Main controller")
 public class OrderController {
     private final OrderService orderService;
+    private final Mapper mapper;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, Mapper mapper) {
         this.orderService = orderService;
+        this.mapper = mapper;
     }
 
     @PostMapping("/order")
@@ -36,8 +39,8 @@ public class OrderController {
     		@ApiResponse(responseCode = "200", description = "A new order has been successfully created"),
     		@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> create(@RequestBody Order order) {
-    	orderService.create(order);
+    ResponseEntity<?> create(@RequestBody OrderDTO order) {
+    	orderService.create(mapper.toOrder(order));
     	return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -53,7 +56,7 @@ public class OrderController {
     })
     ResponseEntity<?> readById(@PathVariable int id) {
     	if (orderService.findById(id) != null)
-    		return new ResponseEntity<Order>(orderService.findById(id), HttpStatus.OK);
+    		return new ResponseEntity<OrderDTO>(mapper.toDTO(orderService.findById(id)), HttpStatus.OK);
     	else
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -67,10 +70,10 @@ public class OrderController {
     	@ApiResponse(responseCode = "200", description = "Order has been updated succesfully"),
     	@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> update(@PathVariable int id, @RequestBody Order order) {
+    ResponseEntity<?> update(@PathVariable int id, @RequestBody OrderDTO order) {
         order.setId(id);
-        orderService.update(order);
-        return new ResponseEntity<Order>(order, HttpStatus.OK);
+        orderService.update(mapper.toOrder(order));
+        return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
     }
 
     @DeleteMapping("/order/{id}")
