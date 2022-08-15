@@ -3,6 +3,8 @@
  */
 package com.lgadetsky.orderservice.service;
 
+import java.util.List;
+
 import com.lgadetsky.orderservice.model.Session;
 import com.lgadetsky.orderservice.repository.mapper.SessionMapper;
 
@@ -29,7 +31,11 @@ public class SessionService implements Service<Session, String> {
 	public Session findById(String id) {
 		return sessionMapper.findBySessionId(id);
 	}
-
+	
+	public List<Session> findAll(){
+		return sessionMapper.findAll();
+	}
+	
 	@Override
 	public Session update(Session session) {
 		sessionMapper.update(session);

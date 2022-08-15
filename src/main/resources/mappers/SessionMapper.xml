@@ -23,7 +23,12 @@
 			parameterType="string"
 			resultMap="sessionResultMap">
 		select * from "session"
-		where session_id = #{sessionId}
+		where session_id = #{sessionId};
+	</select>
+	
+	<select id="findAll"
+			resultMap="sessionResultMap">
+		select * from "session";		
 	</select>
 	
 	<update id="update"
