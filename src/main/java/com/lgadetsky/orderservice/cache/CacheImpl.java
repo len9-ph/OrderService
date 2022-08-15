@@ -1,25 +1,28 @@
 package com.lgadetsky.orderservice.cache;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class CacheImpl<K, V> implements Cache<K, V> {
-	private Map<K, V> map;
+import com.lgadetsky.orderservice.model.Session;
+
+public class CacheImpl implements Cache<String, Session> {
+	private Map<String, Session> map;
 	
-	
-	
-	@Override
-	public boolean load() {
-		// TODO Auto-generated method stub
-		return false;
+	public CacheImpl(List<Session> list) {
+		map = new HashMap<>();
+		for(Session s : list) {
+			map.put(s.getSessionId(), s);
+		}
 	}
 
 	@Override
-	public void put(K key, V value) {
+	public void put(String key, Session value) {
 		map.put(key, value);
 	}
 	
 	@Override
-	public V get(K key) {
+	public Session get(String key) {
 		if (map.get(key) != null)
 			return map.get(key);
 		return null;
@@ -34,4 +37,5 @@ public class CacheImpl<K, V> implements Cache<K, V> {
 	public void clear() {
 		map.clear();
 	}
+
 }
