@@ -14,6 +14,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
+import com.lgadetsky.orderservice.cache.CacheImpl;
 import com.lgadetsky.orderservice.model.Session;
 import com.lgadetsky.orderservice.service.SessionService;
 
@@ -25,9 +26,11 @@ import com.lgadetsky.orderservice.service.SessionService;
 public class OrderFilter implements Filter{
 	
 	private final SessionService sessionService;
+	private CacheImpl cache;
 	
 	public OrderFilter(SessionService sessionService) {
 		this.sessionService = sessionService;
+		this.cache = new CacheImpl(sessionService.findAll());
 	}
 
 	@Override
@@ -41,7 +44,10 @@ public class OrderFilter implements Filter{
 		
 		String sessionId = request.getParameter("session-id");
 		if (sessionId != null) {
-			Session session = sessionService.findById(sessionId);
+			if (cache.get(sessionId) == null)
+				cache.put(sessionService.findById(sessionId).getSessionId(), sessionService.findById(sessionId));
+				 
+			Session session = cache.get(sessionId);
 			if (session != null) 
 				if (isSessionValid(session))
 					chain.doFilter(request, response);
@@ -56,9 +62,8 @@ public class OrderFilter implements Filter{
 	}
 	
 	private boolean isSessionValid(Session session) {
-		return (new Date().getTime() - session.getStartTime().getTime()) < (session.getTimeoutMinutes() * 60000);
+		return session.getTimeoutMinutes() == 0 | (new Date().getTime() - session.getStartTime().getTime()) < (session.getTimeoutMinutes() * 60000);
 	}
-	
 	
 	@Override
 	public void destroy() {
