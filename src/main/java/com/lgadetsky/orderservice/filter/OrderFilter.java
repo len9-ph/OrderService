@@ -26,11 +26,9 @@ import com.lgadetsky.orderservice.service.SessionService;
 public class OrderFilter implements Filter{
 	
 	private final SessionService sessionService;
-	private CacheImpl cache;
 	
 	public OrderFilter(SessionService sessionService) {
 		this.sessionService = sessionService;
-		this.cache = new CacheImpl(sessionService.findAll());
 	}
 
 	@Override
@@ -44,10 +42,10 @@ public class OrderFilter implements Filter{
 		
 		String sessionId = request.getParameter("session-id");
 		if (sessionId != null) {
-			if (cache.get(sessionId) == null)
-				cache.put(sessionService.findById(sessionId).getSessionId(), sessionService.findById(sessionId));
+			if (CacheImpl.getInstance().get(sessionId) == null)
+				CacheImpl.getInstance().put(sessionService.findById(sessionId).getSessionId(), sessionService.findById(sessionId));
 				 
-			Session session = cache.get(sessionId);
+			Session session = CacheImpl.getInstance().get(sessionId);
 			if (session != null) 
 				if (isSessionValid(session))
 					chain.doFilter(request, response);
