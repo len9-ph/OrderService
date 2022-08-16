@@ -72,7 +72,7 @@ public class ServletController extends HttpServlet {
 
 			switch (mes.getCommand()) {
 			case ("create"):{
-				orderService.create(mapper.toOrder(mes.getBody()));
+				orderService.create(mapper.dtoStringToOrder(mes.getBody()));
 			
 				out.println("<html>"
 						+ "<h3>New order successfully created</h3> "

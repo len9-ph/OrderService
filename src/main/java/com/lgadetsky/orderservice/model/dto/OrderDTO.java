@@ -5,6 +5,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.Data;
@@ -31,7 +32,11 @@ public class OrderDTO {
 	@XmlElement(name = "customerComment")
     private String customerComment;
 	
-	//@XmlElementWrapper(name = "items")
-	//@XmlElement(name = "items")
+	@XmlElementWrapper(name = "items")
+	@XmlElement(name = "item")
     private List<ItemDTO> orderItems;
+    
+    @XmlElementWrapper(name = "items")
+    @XmlElement(name = "item")
+    private List<String> items;
 }

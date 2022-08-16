@@ -42,7 +42,7 @@ public class OrderController {
     		@ApiResponse(responseCode = "500", description = "Server error")
     })
     ResponseEntity<?> create(@RequestBody OrderDTO order) {
-    	orderService.create(mapper.toOrder(order));
+    	orderService.create(mapper.dtoStringToOrder(order));
     	return new ResponseEntity<>(HttpStatus.OK);
     }
 
