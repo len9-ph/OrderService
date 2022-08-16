@@ -14,6 +14,10 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.lgadetsky.orderservice.exception.OrderNotFoundException;
 import com.lgadetsky.orderservice.model.dto.MessageDTO;
 import com.lgadetsky.orderservice.model.dto.OrderDTO;
 import com.lgadetsky.orderservice.repository.mapper.Mapper;
@@ -36,17 +40,18 @@ public class ServletController extends HttpServlet {
 
 		resp.setContentType("application/xml");
 		
-		// Получаем id заказа из параметров запроса
-		
 		int id = Integer.parseInt(req.getParameter("id"));
-		// Строим xml файл по полученному из базы pojo классу отображающему нужный заказ
 		try {
 
 			 PrintWriter out = resp.getWriter(); 
 			 JAXBContext jaxbContent = JAXBContext.newInstance(OrderDTO.class); 
 			 Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
 			 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			 jaxbMarshaller.marshal(mapper.toDTO(orderService.findById(id)), out);
+			 try {
+				 jaxbMarshaller.marshal(mapper.toDTO(orderService.findById(id)), out);
+			 } catch(OrderNotFoundException e) {
+				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
+			 }
 			 } 
 		catch (JAXBException e) {
 			e.printStackTrace();
@@ -76,7 +81,11 @@ public class ServletController extends HttpServlet {
 			}
 			case ("update"):{
 			
-				//int id = Integer.parseInt(req.getParameter("id"));
+				try {
+					orderService.update(mapper.toOrder(mes.getBody()));
+				} catch(OrderNotFoundException e) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct Order id", e);
+				}
 				orderService.update(mapper.toOrder(mes.getBody()));
 				
 				out.println("<html>"
@@ -93,6 +102,8 @@ public class ServletController extends HttpServlet {
 						+ "</html>");
 				break;
 			}
+			default:
+				resp.sendError(400, "Bad request!");
 			}
 
 		} catch (JAXBException e) {

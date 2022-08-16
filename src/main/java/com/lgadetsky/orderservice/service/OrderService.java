@@ -1,6 +1,6 @@
 package com.lgadetsky.orderservice.service;
 
-import com.lgadetsky.orderservice.exception.OrderIdNotFoundException;
+import com.lgadetsky.orderservice.exception.OrderNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.OrderItem;
 import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
@@ -40,7 +40,9 @@ public class OrderService implements Service<Order, Integer>{
 
 	@Override
 	public Order findById(Integer id) {
-		return orderMapper.findById(id);
+		if (orderMapper.findById(id) != null)
+			return orderMapper.findById(id);
+		else throw new OrderNotFoundException();
 	}
 	
 	@Override
@@ -76,7 +78,7 @@ public class OrderService implements Service<Order, Integer>{
 			
 			return order;
 		}
-		else throw new OrderIdNotFoundException();
+		else throw new OrderNotFoundException();
 	}
 
 	@Override

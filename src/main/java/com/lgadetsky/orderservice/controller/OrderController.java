@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.lgadetsky.orderservice.exception.OrderNotFoundException;
 import com.lgadetsky.orderservice.model.dto.OrderDTO;
 import com.lgadetsky.orderservice.repository.mapper.Mapper;
 import com.lgadetsky.orderservice.service.OrderService;
@@ -55,10 +57,11 @@ public class OrderController {
     		@ApiResponse(responseCode = "500", description = "Server error")
     })
     ResponseEntity<?> readById(@PathVariable int id) {
-    	if (orderService.findById(id) != null)
+    	try {
     		return new ResponseEntity<OrderDTO>(mapper.toDTO(orderService.findById(id)), HttpStatus.OK);
-    	else
-    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}catch(OrderNotFoundException e) {
+    		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
+    	}
     }
 
     @PutMapping("/order/{id}")
@@ -68,12 +71,18 @@ public class OrderController {
     )
     @ApiResponses(value = {
     	@ApiResponse(responseCode = "200", description = "Order has been updated succesfully"),
+    	@ApiResponse(responseCode = "400", description = "Bar request"),
     	@ApiResponse(responseCode = "500", description = "Server error")
     })
     ResponseEntity<?> update(@PathVariable int id, @RequestBody OrderDTO order) {
         order.setId(id);
-        orderService.update(mapper.toOrder(order));
-        return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
+        try {
+        	orderService.update(mapper.toOrder(order));
+        	return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
+        } catch (OrderNotFoundException e) {
+        	throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct Order id", e);
+        }
+        
     }
 
     @DeleteMapping("/order/{id}")
