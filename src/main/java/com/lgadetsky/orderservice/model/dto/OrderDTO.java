@@ -32,11 +32,13 @@ public class OrderDTO {
 	@XmlElement(name = "customerComment")
     private String customerComment;
 	
+	@XmlElementWrapper(name = "items")
+	@XmlElement(name = "itemName")
+    private List<String> items;
+	
 	@XmlElementWrapper(name = "orderItems")
 	@XmlElement(name = "item")
     private List<ItemDTO> orderItems;
     
-    @XmlElementWrapper(name = "items")
-    @XmlElement(name = "item")
-    private List<String> items;
+    
 }

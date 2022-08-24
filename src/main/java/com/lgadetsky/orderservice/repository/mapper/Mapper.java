@@ -25,7 +25,7 @@ public class Mapper {
 		dto.setId(order.getId());
 		dto.setOrderStatusId(order.getOrderStatusId());
 		dto.setCustomerName(order.getCustomerName());
-		dto.setCustomerPhone(dto.getCustomerPhone());
+		dto.setCustomerPhone(order.getCustomerPhone());
 		dto.setCustomerComment(order.getCustomerComment());
 		dto.setOrderItems(itemToDto(order.getOrderItems()));
 		
