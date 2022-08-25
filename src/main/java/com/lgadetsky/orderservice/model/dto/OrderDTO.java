@@ -8,16 +8,18 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @XmlRootElement(name="order")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OrderDTO {
 	
-	@XmlElement
+	@XmlElement(name = "id")
     private int id;
 	
 	@XmlElement(name = "orderStatusId")
@@ -38,7 +40,5 @@ public class OrderDTO {
 	
 	@XmlElementWrapper(name = "orderItems")
 	@XmlElement(name = "item")
-    private List<ItemDTO> orderItems;
-    
-    
+    private List<ItemDTO> orderItems;   
 }

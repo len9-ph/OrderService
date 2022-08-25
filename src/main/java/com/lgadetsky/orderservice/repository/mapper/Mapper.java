@@ -28,7 +28,11 @@ public class Mapper {
 		dto.setCustomerPhone(order.getCustomerPhone());
 		dto.setCustomerComment(order.getCustomerComment());
 		dto.setOrderItems(itemToDto(order.getOrderItems()));
+		List<String> str = new LinkedList<String>();
 		
+		for (OrderItem item : order.getOrderItems())
+			str.add(item.getItemName());
+		dto.setItems(str);
 		return dto;
 	}
 	
@@ -45,6 +49,8 @@ public class Mapper {
 		return order;
 	}
 	
+	
+	//error
 	public Order dtoStringToOrder(OrderDTO dto) {
 		Order order = new Order();
 		
@@ -75,7 +81,7 @@ public class Mapper {
 		
 		return items;
 	}
-	
+	//error
 	private List<OrderItem> dtoStringToItem(List<String> dtos, int orderId){
 		List<OrderItem> items = new LinkedList<>();
 		

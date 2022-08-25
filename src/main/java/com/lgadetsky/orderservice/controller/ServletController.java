@@ -44,11 +44,14 @@ public class ServletController extends HttpServlet {
 		try {
 
 			 PrintWriter out = resp.getWriter(); 
-			 JAXBContext jaxbContent = JAXBContext.newInstance(OrderDTO.class); 
+			 JAXBContext jaxbContent = JAXBContext.newInstance(MessageDTO.class); 
 			 Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
 			 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			 try {
-				 jaxbMarshaller.marshal(mapper.toDTO(orderService.findById(id)), out);
+				 MessageDTO mes = new MessageDTO();
+				 mes.setCommand("hello");
+				 mes.setBody(mapper.toDTO(orderService.findById(id)));
+				 jaxbMarshaller.marshal(mes, out);
 			 } catch(OrderNotFoundException e) {
 				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
 			 }
@@ -61,13 +64,17 @@ public class ServletController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		//Получили поток
 		InputStream is = req.getInputStream();
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(MessageDTO.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			
 			MessageDTO mes = (MessageDTO) jaxbUnmarshaller.unmarshal(is);
-
+				
 			PrintWriter out = resp.getWriter();
+			out.print(mes.toString());
+			out.print("AAAAAAAAAAAAAAAAAA");
 			resp.setContentType("text/html");
 
 			switch (mes.getCommand()) {
