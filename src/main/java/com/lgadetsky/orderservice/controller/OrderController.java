@@ -1,5 +1,7 @@
 package com.lgadetsky.orderservice.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,9 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import com.lgadetsky.orderservice.exception.OrderNotFoundException;
 import com.lgadetsky.orderservice.model.dto.OrderDTO;
 import com.lgadetsky.orderservice.repository.mapper.Mapper;
 import com.lgadetsky.orderservice.service.OrderService;
@@ -41,7 +41,7 @@ public class OrderController {
     		@ApiResponse(responseCode = "200", description = "A new order has been successfully created"),
     		@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> create(@RequestBody OrderDTO order) {
+    ResponseEntity<?> create(@Valid @RequestBody OrderDTO order) {
     	orderService.create(mapper.toOrder(order));
     	return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -57,11 +57,8 @@ public class OrderController {
     		@ApiResponse(responseCode = "500", description = "Server error")
     })
     ResponseEntity<?> readById(@PathVariable int id) {
-    	try {
     		return new ResponseEntity<OrderDTO>(mapper.toDTO(orderService.findById(id)), HttpStatus.OK);
-    	}catch(OrderNotFoundException e) {
-    		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
-    	}
+
     }
 
     @PutMapping("/order/{id}")
@@ -74,14 +71,11 @@ public class OrderController {
     	@ApiResponse(responseCode = "400", description = "Bar request"),
     	@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> update(@PathVariable int id, @RequestBody OrderDTO order) {
+    ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody OrderDTO order) {
         order.setId(id);
-        try {
-        	orderService.update(mapper.toOrder(order));
-        	return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
-        } catch (OrderNotFoundException e) {
-        	throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct Order id", e);
-        }
+        orderService.update(mapper.toOrder(order));
+        return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
+        
         
     }
 

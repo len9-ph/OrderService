@@ -9,6 +9,7 @@ import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -16,15 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @org.springframework.stereotype.Service
 public class OrderService implements Service<Order, Integer>{
+	@Autowired
+	private OrderMapper orderMapper;
+	@Autowired
+	private OrderItemMapper orderItemMapper;
 	
-	private final OrderMapper orderMapper;
-	private final OrderItemMapper orderItemMapper;
-	
-	public OrderService(OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
-		this.orderMapper = orderMapper;
-		this.orderItemMapper = orderItemMapper;
-	}
-
 	@Override
 	@Transactional
 	public Order create(Order order) {
