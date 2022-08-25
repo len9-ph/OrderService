@@ -5,21 +5,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * @author lgadetsky
- * DTO класс необходимый для парсинга комманд полученных из тела запроса
- */
 @Data
 @NoArgsConstructor
-@XmlRootElement(name = "message")
+@AllArgsConstructor
+@XmlRootElement(name = "order")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class MessageDTO {
-	@XmlElement(name = "command")
-	private String command;
-	
-	@XmlElement(name = "body")
-	private Body body;
+public class Body {
+	@XmlElement(name = "order")
+	OrderDTO order;
 }

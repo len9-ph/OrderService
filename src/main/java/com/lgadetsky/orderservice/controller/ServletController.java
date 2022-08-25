@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.lgadetsky.orderservice.exception.OrderNotFoundException;
+import com.lgadetsky.orderservice.model.dto.Body;
 import com.lgadetsky.orderservice.model.dto.MessageDTO;
 import com.lgadetsky.orderservice.model.dto.OrderDTO;
 import com.lgadetsky.orderservice.repository.mapper.Mapper;
@@ -50,7 +51,7 @@ public class ServletController extends HttpServlet {
 			 try {
 				 MessageDTO mes = new MessageDTO();
 				 mes.setCommand("hello");
-				 mes.setBody(mapper.toDTO(orderService.findById(id)));
+				 mes.setBody(new Body(mapper.toDTO(orderService.findById(id))));
 				 jaxbMarshaller.marshal(mes, out);
 			 } catch(OrderNotFoundException e) {
 				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
@@ -73,14 +74,12 @@ public class ServletController extends HttpServlet {
 			MessageDTO mes = (MessageDTO) jaxbUnmarshaller.unmarshal(is);
 				
 			PrintWriter out = resp.getWriter();
-			out.print(mes.toString());
-			out.print("AAAAAAAAAAAAAAAAAA");
 			resp.setContentType("text/html");
 
 			switch (mes.getCommand()) {
 			case ("create"):{
 				
-				orderService.create(mapper.dtoStringToOrder(mes.getBody()));
+				orderService.create(mapper.dtoStringToOrder(mes.getBody().getOrder()));
 			
 				out.println("<html>"
 						+ "<h3>New order successfully created</h3> "
@@ -90,11 +89,11 @@ public class ServletController extends HttpServlet {
 			case ("update"):{
 			
 				try {
-					orderService.update(mapper.toOrder(mes.getBody()));
+					orderService.update(mapper.toOrder(mes.getBody().getOrder()));
 				} catch(OrderNotFoundException e) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct Order id", e);
 				}
-				orderService.update(mapper.toOrder(mes.getBody()));
+				orderService.update(mapper.toOrder(mes.getBody().getOrder()));
 				
 				out.println("<html>"
 						+ "<h3>Order successfully updated</h3>"
@@ -103,7 +102,7 @@ public class ServletController extends HttpServlet {
 			}
 
 			case ("delete"):{
-				orderService.deleteById(mes.getBody().getId());
+				orderService.deleteById(mes.getBody().getOrder().getId());
 				
 				out.println("<html>"
 						+ "<h3>Order successfully deleted</h3>"

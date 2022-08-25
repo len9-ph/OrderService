@@ -28,11 +28,7 @@ public class Mapper {
 		dto.setCustomerPhone(order.getCustomerPhone());
 		dto.setCustomerComment(order.getCustomerComment());
 		dto.setOrderItems(itemToDto(order.getOrderItems()));
-		List<String> str = new LinkedList<String>();
-		
-		for (OrderItem item : order.getOrderItems())
-			str.add(item.getItemName());
-		dto.setItems(str);
+
 		return dto;
 	}
 	

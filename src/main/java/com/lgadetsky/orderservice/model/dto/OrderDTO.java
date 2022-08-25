@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@XmlRootElement(name="order")
+@XmlRootElement(name = "order")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OrderDTO {
 	
