@@ -18,9 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.lgadetsky.orderservice.exception.OrderNotFoundException;
-import com.lgadetsky.orderservice.model.dto.Body;
 import com.lgadetsky.orderservice.model.dto.MessageDTO;
-import com.lgadetsky.orderservice.model.dto.OrderDTO;
 import com.lgadetsky.orderservice.repository.mapper.Mapper;
 import com.lgadetsky.orderservice.service.OrderService;;
 
@@ -49,10 +47,7 @@ public class ServletController extends HttpServlet {
 			 Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
 			 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			 try {
-				 MessageDTO mes = new MessageDTO();
-				 mes.setCommand("hello");
-				 mes.setBody(new Body(mapper.toDTO(orderService.findById(id))));
-				 jaxbMarshaller.marshal(mes, out);
+				 jaxbMarshaller.marshal(mapper.toDTO(orderService.findById(id)), out);
 			 } catch(OrderNotFoundException e) {
 				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
 			 }
@@ -65,7 +60,6 @@ public class ServletController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//Получили поток
 		InputStream is = req.getInputStream();
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(MessageDTO.class);

@@ -35,7 +35,7 @@ public class OrderDTO {
     private String customerComment;
 	
 	@XmlElementWrapper(name = "items")
-	@XmlElement(name = "itemName")
+	@XmlElement(name = "item")
     private List<String> items;
 	
 	@XmlElementWrapper(name = "orderItems")
