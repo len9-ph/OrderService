@@ -19,19 +19,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.lgadetsky.orderservice.exception.OrderNotFoundException;
 import com.lgadetsky.orderservice.model.dto.MessageDTO;
-import com.lgadetsky.orderservice.repository.mapper.Mapper;
-import com.lgadetsky.orderservice.service.OrderService;;
+import com.lgadetsky.orderservice.service.OrderServletService;;
 
 @WebServlet(value = "/servlet")
 public class ServletController extends HttpServlet {
 	private static final long serialVersionUID = 8024790167396194706L;
 	
-	private final OrderService orderService;
-    private final Mapper mapper;
+	private final OrderServletService orderService;
 
-    public ServletController(OrderService orderService, Mapper mapper) {
+    public ServletController(OrderServletService orderService) {
         this.orderService = orderService;
-        this.mapper = mapper;
     }
 
 	@Override
@@ -47,7 +44,7 @@ public class ServletController extends HttpServlet {
 			 Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
 			 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			 try {
-				 jaxbMarshaller.marshal(mapper.toDTO(orderService.findById(id)), out);
+				 jaxbMarshaller.marshal(orderService.findById(id), out);
 			 } catch(OrderNotFoundException e) {
 				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
 			 }
@@ -73,7 +70,7 @@ public class ServletController extends HttpServlet {
 			switch (mes.getCommand()) {
 			case ("create"):{
 				
-				orderService.create(mapper.dtoStringToOrder(mes.getBody().getOrder()));
+				orderService.create(mes.getBody().getOrder());
 			
 				out.println("<html>"
 						+ "<h3>New order successfully created</h3> "
@@ -83,11 +80,11 @@ public class ServletController extends HttpServlet {
 			case ("update"):{
 			
 				try {
-					orderService.update(mapper.toOrder(mes.getBody().getOrder()));
+					orderService.update(mes.getBody().getOrder());
 				} catch(OrderNotFoundException e) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct Order id", e);
 				}
-				orderService.update(mapper.toOrder(mes.getBody().getOrder()));
+				orderService.update(mes.getBody().getOrder());
 				
 				out.println("<html>"
 						+ "<h3>Order successfully updated</h3>"

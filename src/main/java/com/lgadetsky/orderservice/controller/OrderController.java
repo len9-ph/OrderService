@@ -1,7 +1,5 @@
 package com.lgadetsky.orderservice.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lgadetsky.orderservice.model.dto.OrderDTO;
-import com.lgadetsky.orderservice.repository.mapper.Mapper;
 import com.lgadetsky.orderservice.service.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,11 +22,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "default", description = "Main controller")
 public class OrderController {
     private final OrderService orderService;
-    private final Mapper mapper;
 
-    public OrderController(OrderService orderService, Mapper mapper) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.mapper = mapper;
     }
 
     @PostMapping("/order")
@@ -41,8 +36,8 @@ public class OrderController {
     		@ApiResponse(responseCode = "200", description = "A new order has been successfully created"),
     		@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> create(@Valid @RequestBody OrderDTO order) {
-    	orderService.create(mapper.toOrder(order));
+    ResponseEntity<?> create(@RequestBody OrderDTO order) {
+    	orderService.create(order);
     	return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -57,7 +52,7 @@ public class OrderController {
     		@ApiResponse(responseCode = "500", description = "Server error")
     })
     ResponseEntity<?> readById(@PathVariable int id) {
-    		return new ResponseEntity<OrderDTO>(mapper.toDTO(orderService.findById(id)), HttpStatus.OK);
+    	return new ResponseEntity<OrderDTO>(orderService.findById(id), HttpStatus.OK);
 
     }
 
@@ -71,9 +66,9 @@ public class OrderController {
     	@ApiResponse(responseCode = "400", description = "Bar request"),
     	@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody OrderDTO order) {
+    ResponseEntity<?> update(@PathVariable int id, @RequestBody OrderDTO order) {
         order.setId(id);
-        orderService.update(mapper.toOrder(order));
+        orderService.update(order);
         return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
         
         

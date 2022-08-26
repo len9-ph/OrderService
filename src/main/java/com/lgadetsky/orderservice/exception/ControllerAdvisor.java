@@ -17,9 +17,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler{
+	
 	@ExceptionHandler(OrderNotFoundException.class)
 	public ResponseEntity<Object> handleOrderNotFoundException(
-			OrderNotFoundException ex, WebRequest reques){
+			OrderNotFoundException ex, WebRequest request){
 		
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put("timestamp",LocalDateTime.now());

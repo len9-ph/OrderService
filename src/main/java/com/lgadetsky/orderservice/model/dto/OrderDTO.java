@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,5 +41,8 @@ public class OrderDTO {
 	
 	@XmlElementWrapper(name = "orderItems")
 	@XmlElement(name = "item")
-    private List<ItemDTO> orderItems;   
+    private List<ItemDTO> orderItems; 
+	
+	@XmlTransient
+	PatientView patient;
 }
