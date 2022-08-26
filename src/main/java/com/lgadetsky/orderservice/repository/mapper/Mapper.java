@@ -28,7 +28,7 @@ public class Mapper {
 		dto.setCustomerPhone(order.getCustomerPhone());
 		dto.setCustomerComment(order.getCustomerComment());
 		dto.setOrderItems(itemToDto(order.getOrderItems()));
-		
+
 		return dto;
 	}
 	
@@ -45,6 +45,22 @@ public class Mapper {
 		return order;
 	}
 	
+	
+	//error
+	public Order dtoStringToOrder(OrderDTO dto) {
+		Order order = new Order();
+		
+		order.setId(dto.getId());
+		order.setOrderStatusId(dto.getOrderStatusId());
+		order.setCustomerName(dto.getCustomerName());
+		order.setCustomerPhone(dto.getCustomerPhone());
+		order.setCustomerComment(dto.getCustomerComment());
+		order.setOrderItems(dtoStringToItem(dto.getItems(), order.getId()));
+		
+		return order;
+		
+	}
+	
 	private List<ItemDTO> itemToDto(List<OrderItem> items) {
 		List<ItemDTO> itemsDTO = new LinkedList<>();
 		for (OrderItem item : items) 
@@ -58,6 +74,15 @@ public class Mapper {
 		
 		for (ItemDTO dto : dtos)
 			items.add(new OrderItem(dto.getId(), dto.getOrderId(), dto.getName()));
+		
+		return items;
+	}
+	//error
+	private List<OrderItem> dtoStringToItem(List<String> dtos, int orderId){
+		List<OrderItem> items = new LinkedList<>();
+		
+		for (String dto : dtos)
+			items.add(new OrderItem(0, orderId, dto));
 		
 		return items;
 	}

@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 public class MessageDTO {
 	@XmlElement(name = "command")
 	private String command;
+	
 	@XmlElement(name = "body")
-	private OrderDTO body;
+	private Body body;
 }

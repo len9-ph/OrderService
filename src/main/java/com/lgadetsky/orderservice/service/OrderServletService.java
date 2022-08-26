@@ -1,5 +1,10 @@
 package com.lgadetsky.orderservice.service;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.lgadetsky.orderservice.exception.OrderNotFoundException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.OrderItem;
@@ -8,17 +13,7 @@ import com.lgadetsky.orderservice.repository.mapper.Mapper;
 import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
 import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
-/**
- * @author Leonid Gadetsky
- */
-@org.springframework.stereotype.Service
-public class OrderService implements Service<OrderDTO, Integer>{
+public class OrderServletService implements Service<OrderDTO, Integer> {
 	@Autowired
 	private OrderMapper orderMapper;
 	@Autowired
@@ -27,11 +22,10 @@ public class OrderService implements Service<OrderDTO, Integer>{
 	private Mapper mapper;
 	
 	@Override
-	@Transactional
 	public OrderDTO create(OrderDTO order) {
-		orderMapper.insert(mapper.toOrder(order));
+		orderMapper.insert(mapper.dtoStringToOrder(order));
 		
-		List<OrderItem> items = mapper.toOrder(order).getOrderItems();
+		List<OrderItem> items = mapper.dtoStringToOrder(order).getOrderItems();
 		if(items != null && !items.isEmpty()) {
 			items.forEach(item -> item.setOrderId(order.getId()));
 			orderItemMapper.insertOrderItems(items);
@@ -45,9 +39,8 @@ public class OrderService implements Service<OrderDTO, Integer>{
 			return mapper.toDTO(orderMapper.findById(id));
 		else throw new OrderNotFoundException();
 	}
-	
+
 	@Override
-	@Transactional
 	public OrderDTO update(OrderDTO orderDto) {
 		Order order = mapper.toOrder(orderDto);
 		if(orderMapper.findById(order.getId()) != null) {
@@ -83,9 +76,10 @@ public class OrderService implements Service<OrderDTO, Integer>{
 	}
 
 	@Override
-	@Transactional
 	public void deleteById(Integer id) {
 		orderItemMapper.deleteByOrderId(id);
 		orderMapper.deleteById(id);
+		
 	}
+
 }

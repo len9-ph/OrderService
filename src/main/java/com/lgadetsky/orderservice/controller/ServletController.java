@@ -14,21 +14,21 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.lgadetsky.orderservice.exception.OrderNotFoundException;
 import com.lgadetsky.orderservice.model.dto.MessageDTO;
-import com.lgadetsky.orderservice.model.dto.OrderDTO;
-import com.lgadetsky.orderservice.repository.mapper.Mapper;
-import com.lgadetsky.orderservice.service.OrderService;;
+import com.lgadetsky.orderservice.service.OrderServletService;;
 
 @WebServlet(value = "/servlet")
 public class ServletController extends HttpServlet {
 	private static final long serialVersionUID = 8024790167396194706L;
 	
-	private final OrderService orderService;
-    private final Mapper mapper;
+	private final OrderServletService orderService;
 
-    public ServletController(OrderService orderService, Mapper mapper) {
+    public ServletController(OrderServletService orderService) {
         this.orderService = orderService;
-        this.mapper = mapper;
     }
 
 	@Override
@@ -36,17 +36,18 @@ public class ServletController extends HttpServlet {
 
 		resp.setContentType("application/xml");
 		
-		// Получаем id заказа из параметров запроса
-		
 		int id = Integer.parseInt(req.getParameter("id"));
-		// Строим xml файл по полученному из базы pojo классу отображающему нужный заказ
 		try {
 
 			 PrintWriter out = resp.getWriter(); 
-			 JAXBContext jaxbContent = JAXBContext.newInstance(OrderDTO.class); 
+			 JAXBContext jaxbContent = JAXBContext.newInstance(MessageDTO.class); 
 			 Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
 			 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			 jaxbMarshaller.marshal(mapper.toDTO(orderService.findById(id)), out);
+			 try {
+				 jaxbMarshaller.marshal(orderService.findById(id), out);
+			 } catch(OrderNotFoundException e) {
+				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
+			 }
 			 } 
 		catch (JAXBException e) {
 			e.printStackTrace();
@@ -60,14 +61,16 @@ public class ServletController extends HttpServlet {
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(MessageDTO.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			
 			MessageDTO mes = (MessageDTO) jaxbUnmarshaller.unmarshal(is);
-
+				
 			PrintWriter out = resp.getWriter();
 			resp.setContentType("text/html");
 
 			switch (mes.getCommand()) {
 			case ("create"):{
-				orderService.create(mapper.toOrder(mes.getBody()));
+				
+				orderService.create(mes.getBody().getOrder());
 			
 				out.println("<html>"
 						+ "<h3>New order successfully created</h3> "
@@ -76,8 +79,12 @@ public class ServletController extends HttpServlet {
 			}
 			case ("update"):{
 			
-				//int id = Integer.parseInt(req.getParameter("id"));
-				orderService.update(mapper.toOrder(mes.getBody()));
+				try {
+					orderService.update(mes.getBody().getOrder());
+				} catch(OrderNotFoundException e) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct Order id", e);
+				}
+				orderService.update(mes.getBody().getOrder());
 				
 				out.println("<html>"
 						+ "<h3>Order successfully updated</h3>"
@@ -86,13 +93,15 @@ public class ServletController extends HttpServlet {
 			}
 
 			case ("delete"):{
-				orderService.deleteById(mes.getBody().getId());
+				orderService.deleteById(mes.getBody().getOrder().getId());
 				
 				out.println("<html>"
 						+ "<h3>Order successfully deleted</h3>"
 						+ "</html>");
 				break;
 			}
+			default:
+				resp.sendError(400, "Bad request!");
 			}
 
 		} catch (JAXBException e) {

@@ -4,10 +4,10 @@ package com.lgadetsky.orderservice.exception;
  * @author Leonid Gadetsky
  * Исключение для ситуации, когда в базе данных отсутсвует пользователь с заданным идентификатором
  */
-public class OrderIdNotFoundException extends RuntimeException{
-	private static final long serialVersionUID = 3L;
+public class OrderNotFoundException extends RuntimeException{
+	private static final long serialVersionUID = 1L;
 
-	public OrderIdNotFoundException() {
-        super("Order Id not found");
+	public OrderNotFoundException() {
+        super("Order not found");
     }
 }
