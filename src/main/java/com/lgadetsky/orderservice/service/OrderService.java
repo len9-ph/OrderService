@@ -29,9 +29,9 @@ public class OrderService implements Service<OrderDTO, Integer>{
 	@Override
 	@Transactional
 	public OrderDTO create(OrderDTO order) {
-		orderMapper.insert(mapper.dtoStringToOrder(order));
+		orderMapper.insert(mapper.toOrder(order));
 		
-		List<OrderItem> items = mapper.dtoStringToOrder(order).getOrderItems();
+		List<OrderItem> items = mapper.toOrder(order).getOrderItems();
 		if(items != null && !items.isEmpty()) {
 			items.forEach(item -> item.setOrderId(order.getId()));
 			orderItemMapper.insertOrderItems(items);
