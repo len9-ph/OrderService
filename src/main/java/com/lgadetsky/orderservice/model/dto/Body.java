@@ -17,4 +17,6 @@ import lombok.NoArgsConstructor;
 public class Body {
 	@XmlElement(name = "order")
 	OrderDTO order;
+	@XmlElement(name = "patient")
+	PatientDto patient;
 }

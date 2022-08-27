@@ -7,37 +7,28 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @XmlRootElement(name = "order")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OrderDTO {
+public class OrderView {
 	
 	@XmlElement(name = "id")
-    private int id;
-	
+	private int id;
 	@XmlElement(name = "orderStatusId")
-    private int orderStatusId;
-	
-	@XmlElement(name = "customerName")
-    private String customerName;
-	
-	@XmlElement(name = "customerPhone")
-    private String customerPhone;
-	
+	private int orderStatusId;
 	@XmlElement(name = "customerComment")
-    private String customerComment;
+	private String customerComment;
 	
-	@XmlElementWrapper(name = "items")
-	@XmlElement(name = "item")
-    private List<String> items;
+	
 	
 	@XmlElementWrapper(name = "orderItems")
 	@XmlElement(name = "item")
-    private List<ItemDTO> orderItems; 
+	private List<ItemDTO> orderItems;
+	
+	
 }
