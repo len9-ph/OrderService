@@ -1,5 +1,6 @@
 package com.lgadetsky.orderservice.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,11 +21,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name = "default", description = "Main controller")
 public class OrderController {
-    private final OrderService orderService;
-
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+	
+	@Autowired
+    private OrderService orderService;
 
     @PostMapping("/order")
     @Operation(
@@ -47,7 +46,7 @@ public class OrderController {
     )
     @ApiResponses(value = {
     		@ApiResponse(responseCode = "200", description = "A successful response", content = @Content),
-    		@ApiResponse(responseCode = "404", description = "A resource with requested ID not found", content = @Content),
+    		@ApiResponse (responseCode = "404", description = "A resource with requested ID not found", content = @Content),
     		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     Order readById(@PathVariable int id) {

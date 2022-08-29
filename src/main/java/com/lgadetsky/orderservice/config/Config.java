@@ -3,14 +3,17 @@ package com.lgadetsky.orderservice.config;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Конфигурационный файл Swagger
  */
 @Configuration
-public class SwaggerConfig {
+public class Config {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -24,5 +27,11 @@ public class SwaggerConfig {
                                                 .name("Leonid Gadetsky")
                                 )
                 );
+    }
+    
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    	return builder
+    			.build();
     }
 }
