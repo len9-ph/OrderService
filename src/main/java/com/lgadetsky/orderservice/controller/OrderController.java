@@ -12,6 +12,7 @@ import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.service.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,8 +32,8 @@ public class OrderController {
             description = "Creates a new order with parameters are contained in the request body"
     )
     @ApiResponses(value = {
-    		@ApiResponse(responseCode = "200", description = "A new order has been successfully created"),
-    		@ApiResponse(responseCode = "500", description = "Server error")
+    		@ApiResponse(responseCode = "200", description = "A new order has been successfully created", content = @Content ),
+    		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     Order create(@RequestBody Order order) {
     	orderService.create(order);
@@ -45,9 +46,9 @@ public class OrderController {
             description = "Returns object by 'orderId' or returns null"
     )
     @ApiResponses(value = {
-    		@ApiResponse(responseCode = "200", description = "A successful response"),
-    		@ApiResponse(responseCode = "404", description = "A resource with requested ID not found"),
-    		@ApiResponse(responseCode = "500", description = "Server error")
+    		@ApiResponse(responseCode = "200", description = "A successful response", content = @Content),
+    		@ApiResponse(responseCode = "404", description = "A resource with requested ID not found", content = @Content),
+    		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     Order readById(@PathVariable int id) {
     	return orderService.findById(id);
@@ -60,9 +61,9 @@ public class OrderController {
             description = "Update order by id with parameters are contained in request body"
     )
     @ApiResponses(value = {
-    	@ApiResponse(responseCode = "200", description = "Order has been updated succesfully"),
-    	@ApiResponse(responseCode = "400", description = "Bar request"),
-    	@ApiResponse(responseCode = "500", description = "Server error")
+    	@ApiResponse(responseCode = "200", description = "Order has been updated succesfully", content = @Content),
+    	@ApiResponse(responseCode = "400", description = "Bar request", content = @Content),
+    	@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     Order update(@PathVariable int id, @RequestBody Order order) {
         order.setId(id);
@@ -75,8 +76,8 @@ public class OrderController {
             description = "Removes order by id"
     )
     @ApiResponses(value = {
-    		@ApiResponse(responseCode = "200", description = "Order has been deleted succesfully"),
-        	@ApiResponse(responseCode = "500", description = "Server error")
+    		@ApiResponse(responseCode = "200", description = "Order has been deleted succesfully", content = @Content),
+        	@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     void deleteById(@PathVariable int id) {
         orderService.deleteById(id);
