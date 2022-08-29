@@ -14,6 +14,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.lgadetsky.orderservice.cache.CacheImpl;
 import com.lgadetsky.orderservice.model.Session;
 import com.lgadetsky.orderservice.service.SessionService;
@@ -24,12 +26,13 @@ import com.lgadetsky.orderservice.service.SessionService;
  */
 @WebFilter(urlPatterns = "/servlet")
 public class OrderFilter implements Filter{
-	
-	private final SessionService sessionService;
-	
-	public OrderFilter(SessionService sessionService) {
-		this.sessionService = sessionService;
-	}
+	private static final String SESSION_ID = "session-id";
+	private static final String INVALID_SESSION = "Invalid session";
+    private static final String UNKNOWN_SESSION = "Unknown session";
+    private static final String SESSION_EXPIRED = "Session expired";
+    
+	@Autowired
+	private SessionService sessionService;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -40,7 +43,7 @@ public class OrderFilter implements Filter{
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		
-		String sessionId = request.getParameter("session-id");
+		String sessionId = request.getParameter(SESSION_ID);
 		if (sessionId != null) {
 			if (CacheImpl.getInstance().get(sessionId) == null)
 				CacheImpl.getInstance().put(sessionService.findById(sessionId).getSessionId(), sessionService.findById(sessionId));
@@ -50,12 +53,12 @@ public class OrderFilter implements Filter{
 				if (isSessionValid(session))
 					chain.doFilter(request, response);
 				else
-					response.getWriter().println("Session expired");
+					response.getWriter().println(SESSION_EXPIRED);
 			else 
-				response.getWriter().println("Unknown session");
+				response.getWriter().println(UNKNOWN_SESSION);
 		}
 		else
-			response.getWriter().println("Invalid session");
+			response.getWriter().println(INVALID_SESSION);
 		
 	}
 	
