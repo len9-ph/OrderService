@@ -1,37 +1,33 @@
 package com.lgadetsky.orderservice.service;
 
-import com.lgadetsky.orderservice.exception.OrderNotFoundException;
-import com.lgadetsky.orderservice.model.Order;
-import com.lgadetsky.orderservice.model.OrderItem;
-import com.lgadetsky.orderservice.model.dto.OrderDTO;
-import com.lgadetsky.orderservice.repository.mapper.Mapper;
-import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
-import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
-
 import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lgadetsky.orderservice.exception.OrderNotFoundException;
+import com.lgadetsky.orderservice.model.Order;
+import com.lgadetsky.orderservice.model.OrderItem;
+import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
+import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
+
 /**
  * @author Leonid Gadetsky
  */
 @org.springframework.stereotype.Service
-public class OrderService implements Service<OrderDTO, Integer>{
+public class OrderService implements Service<Order, Integer>{
 	@Autowired
 	private OrderMapper orderMapper;
 	@Autowired
 	private OrderItemMapper orderItemMapper;
-	@Autowired
-	private Mapper mapper;
 	
 	@Override
 	@Transactional
-	public OrderDTO create(OrderDTO order) {
-		orderMapper.insert(mapper.toOrder(order));
+	public Order create(Order order) {
+		orderMapper.insert(order);
 		
-		List<OrderItem> items = mapper.toOrder(order).getOrderItems();
+		List<OrderItem> items = order.getOrderItems();
 		if(items != null && !items.isEmpty()) {
 			items.forEach(item -> item.setOrderId(order.getId()));
 			orderItemMapper.insertOrderItems(items);
@@ -40,16 +36,15 @@ public class OrderService implements Service<OrderDTO, Integer>{
 	}
 
 	@Override
-	public OrderDTO findById(Integer id) {
+	public Order findById(Integer id) {
 		if (orderMapper.findById(id) != null)
-			return mapper.toDTO(orderMapper.findById(id));
+			return orderMapper.findById(id);
 		else throw new OrderNotFoundException();
 	}
 	
 	@Override
 	@Transactional
-	public OrderDTO update(OrderDTO orderDto) {
-		Order order = mapper.toOrder(orderDto);
+	public Order update(Order order) {
 		if(orderMapper.findById(order.getId()) != null) {
 			List<OrderItem> oldOrderItems = orderMapper.findById(order.getId()).getOrderItems();
 			List<OrderItem> newOrderItems = order.getOrderItems();
@@ -77,7 +72,7 @@ public class OrderService implements Service<OrderDTO, Integer>{
 			if(!toUpdate.isEmpty())
 				toUpdate.forEach(item -> orderItemMapper.update(item));
 			
-			return orderDto;
+			return order;
 		}
 		else throw new OrderNotFoundException();
 	}

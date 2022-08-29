@@ -1,11 +1,15 @@
 package com.lgadetsky.orderservice.model;
 
+import com.lgadetsky.orderservice.model.dto.ItemDTO;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Сущность предмета заказа")
@@ -16,6 +20,14 @@ public class OrderItem {
     private int orderId;
     @Schema(description = "Название предмета", example = "Order item #1")
     private String itemName;
+    
+    public static OrderItem of(ItemDTO i) {
+    	return new OrderItemBuilder()
+    			.id(i.getId())
+    			.orderId(i.getOrderId())
+    			.itemName(i.getName())
+    			.build();
+    }
     
     @Override
     public boolean equals(Object obj) {

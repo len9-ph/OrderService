@@ -1,15 +1,21 @@
 package com.lgadetsky.orderservice.model;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import com.lgadetsky.orderservice.model.dto.ItemDTO;
+import com.lgadetsky.orderservice.model.dto.OrderDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Schema(description = "Сущность заказа")
 public class Order {
 	
@@ -31,5 +37,23 @@ public class Order {
     @Schema(description = "Список предметов заказа")
     List<OrderItem> orderItems;
 	
+    public List<ItemDTO> toItemsDto(){
+		List<ItemDTO> items = new LinkedList<>();
+		for (OrderItem i : orderItems)
+			items.add(ItemDTO.of(i));
+		return items;
+	}
+    
+    public static Order of(OrderDTO o) {
+    	return new OrderBuilder()
+    			.id(o.getId())
+    			.orderStatusId(o.getOrderStatusId())
+    			.customerName(o.getCustomerName())
+    			.customerComment(o.getCustomerComment())
+    			.customerPhone(o.getCustomerPhone())
+    			.orderItems(o.toOrderItems())
+    			.build();
+    }
+    
 }
 

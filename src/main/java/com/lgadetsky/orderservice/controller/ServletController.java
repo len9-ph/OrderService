@@ -19,15 +19,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.lgadetsky.orderservice.exception.OrderNotFoundException;
+import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.dto.MessageDTO;
-import com.lgadetsky.orderservice.service.OrderServletService;;
+import com.lgadetsky.orderservice.model.dto.OrderDTO;
+import com.lgadetsky.orderservice.service.OrderService;
 
 @WebServlet(value = "/servlet")
 public class ServletController extends HttpServlet {
 	private static final long serialVersionUID = 8024790167396194706L;
 	
 	@Autowired
-	private OrderServletService orderService;
+	private OrderService orderService;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,7 +44,7 @@ public class ServletController extends HttpServlet {
 			 Marshaller jaxbMarshaller = jaxbContent.createMarshaller();
 			 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			 try {
-				 jaxbMarshaller.marshal(orderService.findById(id), out);
+				 jaxbMarshaller.marshal(OrderDTO.of(orderService.findById(id)), out);
 			 } catch(OrderNotFoundException e) {
 				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
 			 }
@@ -68,7 +70,7 @@ public class ServletController extends HttpServlet {
 			switch (mes.getCommand()) {
 			case ("create"):{
 				
-				orderService.create(mes.getBody().getOrder());
+				orderService.create(Order.of(mes.getBody().getOrder()));
 			
 				out.println("<html>"
 						+ "<h3>New order successfully created</h3> "
@@ -78,12 +80,10 @@ public class ServletController extends HttpServlet {
 			case ("update"):{
 			
 				try {
-					orderService.update(mes.getBody().getOrder());
+					orderService.update(Order.of(mes.getBody().getOrder()));
 				} catch(OrderNotFoundException e) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct Order id", e);
-				}
-				orderService.update(mes.getBody().getOrder());
-				
+				}	
 				out.println("<html>"
 						+ "<h3>Order successfully updated</h3>"
 						+ "</html>");

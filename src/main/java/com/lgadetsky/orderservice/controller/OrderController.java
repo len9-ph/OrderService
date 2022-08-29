@@ -1,7 +1,5 @@
 package com.lgadetsky.orderservice.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lgadetsky.orderservice.model.dto.OrderDTO;
+import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.service.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,9 +34,9 @@ public class OrderController {
     		@ApiResponse(responseCode = "200", description = "A new order has been successfully created"),
     		@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> create(@RequestBody OrderDTO order) {
+    Order create(@RequestBody Order order) {
     	orderService.create(order);
-    	return new ResponseEntity<>(HttpStatus.OK);
+    	return order;
     }
 
     @GetMapping("/order/{id}")
@@ -51,8 +49,8 @@ public class OrderController {
     		@ApiResponse(responseCode = "404", description = "A resource with requested ID not found"),
     		@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> readById(@PathVariable int id) {
-    	return new ResponseEntity<OrderDTO>(orderService.findById(id), HttpStatus.OK);
+    Order readById(@PathVariable int id) {
+    	return orderService.findById(id);
 
     }
 
@@ -66,12 +64,9 @@ public class OrderController {
     	@ApiResponse(responseCode = "400", description = "Bar request"),
     	@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> update(@PathVariable int id, @RequestBody OrderDTO order) {
+    Order update(@PathVariable int id, @RequestBody Order order) {
         order.setId(id);
-        orderService.update(order);
-        return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
-        
-        
+        return orderService.update(order);
     }
 
     @DeleteMapping("/order/{id}")
@@ -83,9 +78,8 @@ public class OrderController {
     		@ApiResponse(responseCode = "200", description = "Order has been deleted succesfully"),
         	@ApiResponse(responseCode = "500", description = "Server error")
     })
-    ResponseEntity<?> deleteById(@PathVariable int id) {
+    void deleteById(@PathVariable int id) {
         orderService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

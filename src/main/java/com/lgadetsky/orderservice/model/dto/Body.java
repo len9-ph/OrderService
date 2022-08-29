@@ -1,5 +1,4 @@
-package com.lgadetsky.orderservice.model.dto;
-
+package com.lgadetsky.orderservice.model.dto; 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -17,6 +16,6 @@ import lombok.NoArgsConstructor;
 public class Body {
 	@XmlElement(name = "order")
 	OrderDTO order;
-	@XmlElement(name = "patient")
-	PatientDto patient;
+//	@XmlElement(name = "patient")
+//	PatientDto patient;
 }
