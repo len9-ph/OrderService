@@ -49,10 +49,20 @@ public class OrderDTO {
     private List<ItemDTO> orderItems; 
 	
 	public List<OrderItem> toOrderItems(){
-		List<OrderItem> items = new LinkedList<>();
-		for (ItemDTO dto : orderItems)
-			items.add(OrderItem.of(dto));
-		return items;
+		if(items.isEmpty()) {
+			List<OrderItem> it = new LinkedList<>();
+			for (ItemDTO dto : orderItems)
+				it.add(OrderItem.of(dto));
+			return it;
+		}else {
+			List<OrderItem> it = new LinkedList<>();
+			for (String s : items) {
+				OrderItem i = OrderItem.of(s);
+				i.setOrderId(id);
+				it.add(i);
+			}
+			return it;
+		}
 	}
 	
 	public static OrderDTO of(Order o) {

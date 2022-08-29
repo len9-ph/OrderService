@@ -29,6 +29,12 @@ public class OrderItem {
     			.build();
     }
     
+    public static OrderItem of(String s) {
+    	return new OrderItemBuilder()
+    			.itemName(s)
+    			.build();
+    }
+    
     @Override
     public boolean equals(Object obj) {
     	if (obj == null)

@@ -1,4 +1,4 @@
-package com.lgadetsky.orderservice.controller;
+package com.lgadetsky.orderservice.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,14 +74,14 @@ public class ServletController extends HttpServlet {
 			resp.setContentType("text/html");
 
 			switch (mes.getCommand()) {
-			case ("create"):{
+			case CREATE:{
 				
 				orderService.create(Order.of(mes.getBody().getOrder()));
 			
 				out.println(HTML_CREATED);
 				break;
 			}
-			case ("update"):{
+			case UPDATE:{
 			
 				try {
 					orderService.update(Order.of(mes.getBody().getOrder()));
@@ -92,7 +92,7 @@ public class ServletController extends HttpServlet {
 				break;
 			}
 
-			case ("delete"):{
+			case DELETE:{
 				orderService.deleteById(mes.getBody().getOrder().getId());
 				
 				out.println(HTML_DELETED);
