@@ -24,6 +24,9 @@ public class Order {
 	
     @Schema(description = "Идентификатор статуса заказа", example = "1")
     private int orderStatusId;
+    
+    @Schema(description = "Идентификатор пациента", example = "1000")
+    private int patientId;
 	
     @Schema(description = "Имя заказчика", example = "Иван И.И.")
     private String customerName;

@@ -15,6 +15,7 @@
         <result property="customerName" column="CUSTOMER_NAME"/>
         <result property="customerPhone" column="CUSTOMER_PHONE"/>
         <result property="customerComment" column="CUSTOMER_COMMENT"/>
+        <result property="patientId" column="PATIENT_ID"/>
         <collection property="orderItems" resultMap="orderItemResultMap" columnPrefix="oi_"/>
     </resultMap>
 
@@ -22,8 +23,8 @@
             parameterType="com.lgadetsky.orderservice.model.Order"
             useGeneratedKeys="true"
             keyProperty="id">
-        insert into "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)
-        values (NEXTVAL('order_seq'), #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment});
+        insert into "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT, PATIENT_ID)
+        values (NEXTVAL('order_seq'), #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment},  #{patientId});
     </insert>
 	
 	<select id="findById"
@@ -33,6 +34,7 @@
 		select
 			o.id,
 			o.order_status_id,
+			o.patient_id,
 			o.customer_name,
 			o.customer_phone,
 			o.customer_comment,

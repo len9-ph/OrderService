@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lgadetsky.orderservice.model.Order;
+import com.lgadetsky.orderservice.model.dto.OrderPatient;
 import com.lgadetsky.orderservice.service.OrderService;
+import com.lgadetsky.orderservice.service.PatientService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,6 +26,8 @@ public class OrderController {
 	
 	@Autowired
     private OrderService orderService;
+	@Autowired
+	private PatientService patientService;
 
     @PostMapping("/order")
     @Operation(
@@ -49,8 +53,15 @@ public class OrderController {
     		@ApiResponse (responseCode = "404", description = "A resource with requested ID not found", content = @Content),
     		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
-    Order readById(@PathVariable int id) {
-    	return orderService.findById(id);
+    OrderPatient readById(@PathVariable int id) {
+    	
+    	OrderPatient res = new OrderPatient();
+    	
+    	res.setOrder(orderService.findById(id));
+    	
+    	
+    	res.setPatient(patientService.findById(res.getOrder().getPatientId()));
+    	return res;
 
     }
 
