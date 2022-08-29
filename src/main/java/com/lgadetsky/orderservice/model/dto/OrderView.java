@@ -23,12 +23,9 @@ public class OrderView {
 	private int orderStatusId;
 	@XmlElement(name = "customerComment")
 	private String customerComment;
-	
-	
-	
+	@XmlElement(name = "patientId")
+	private int patientId;
 	@XmlElementWrapper(name = "orderItems")
 	@XmlElement(name = "item")
 	private List<ItemDTO> orderItems;
-	
-	
 }

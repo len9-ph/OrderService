@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,11 +26,8 @@ import com.lgadetsky.orderservice.service.OrderServletService;;
 public class ServletController extends HttpServlet {
 	private static final long serialVersionUID = 8024790167396194706L;
 	
-	private final OrderServletService orderService;
-
-    public ServletController(OrderServletService orderService) {
-        this.orderService = orderService;
-    }
+	@Autowired
+	private OrderServletService orderService;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
