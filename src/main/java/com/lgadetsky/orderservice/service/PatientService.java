@@ -1,9 +1,5 @@
 package com.lgadetsky.orderservice.service;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,22 +13,35 @@ import com.lgadetsky.orderservice.model.dto.PatientDto;
 
 @org.springframework.stereotype.Service
 public class PatientService implements Service<PatientDto, Integer>{
-	
 	private static final String URL = "http://localhost:8091/";
 	private static final String PATIENT_ID = "patientId/";
 	private static final String PATIENT = "patient/";
+	private static final String FIRST_NAME = "firstName";
+	private static final String MID_NAME = "midName";
+	private static final String LAST_NAME = "lastName";
+	private static final String BIRTHDAY = "birthday";
+	
 	@Autowired
 	RestTemplate restTemplate;
 	
 	@Override
 	public PatientDto create(PatientDto obj) {
-		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate.postForObject(URL, obj, PatientDto.class);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<PatientDto> entity = new HttpEntity<>(obj, headers); 
+		
+		try {
+			ResponseEntity<PatientDto> response = restTemplate.postForEntity(URL
+					+ PATIENT, entity, PatientDto.class);
+			return response.getBody();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
 	public PatientDto findById(Integer id) {
-		//RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -47,22 +56,43 @@ public class PatientService implements Service<PatientDto, Integer>{
 		}
 	}
 	
-	public PatientDto findByName(Map<String, Integer> id) {
-		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate.getForObject(URL, PatientDto.class, id);
+	public PatientDto findByName(String first, String mid, String last, String birthday) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL + PATIENT)
+				.queryParam(FIRST_NAME, first)
+				.queryParam(MID_NAME, mid)
+				.queryParam(LAST_NAME, last)
+				.queryParam(BIRTHDAY, birthday);
+		try {
+			ResponseEntity<PatientDto> response = restTemplate
+					.exchange(builder.toUriString(), HttpMethod.GET, entity, PatientDto.class);
+			return response.getBody();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
 	public PatientDto update(PatientDto obj) {
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.put(URL, obj, PatientDto.class);
-		return obj;
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<PatientDto> requestBody = new HttpEntity<>(obj, headers);
+		
+		try {
+			 restTemplate.put(URL + PATIENT, requestBody);
+			 return obj;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.delete(URL, id);
 	}
 	
 }

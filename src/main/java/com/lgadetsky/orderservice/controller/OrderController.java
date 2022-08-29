@@ -38,9 +38,11 @@ public class OrderController {
     		@ApiResponse(responseCode = "200", description = "A new order has been successfully created", content = @Content ),
     		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
-    Order create(@RequestBody Order order) {
-    	orderService.create(order);
-    	return order;
+    OrderPatient create(@RequestBody OrderPatient op) {
+    	
+    	
+    	
+    	return op;
     }
 
     @GetMapping("/order/{id}")
