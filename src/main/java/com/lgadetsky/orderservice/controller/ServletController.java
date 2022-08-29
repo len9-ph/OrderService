@@ -30,7 +30,13 @@ public class ServletController extends HttpServlet {
 	
 	@Autowired
 	private OrderService orderService;
-
+	
+	private static final String ID_NOT_FOUND = "Order with requested ID not found";
+	private static final String BAD_REQ = "Bad request!";
+	private static final String HTML_CREATED = "<html>" + "<h3>New order successfully created</h3> " + "</html>";
+	private static final String HTML_UPDATED = "<html>" + "<h3>Order successfully updated</h3>" + "</html>";
+	private static final String HTML_DELETED = "<html>" + "<h3>Order successfully deleted</h3>" + "</html>";
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -46,7 +52,7 @@ public class ServletController extends HttpServlet {
 			 try {
 				 jaxbMarshaller.marshal(OrderDTO.of(orderService.findById(id)), out);
 			 } catch(OrderNotFoundException e) {
-				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order with requested ID not found", e);
+				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, ID_NOT_FOUND, e);
 			 }
 			 } 
 		catch (JAXBException e) {
@@ -72,9 +78,7 @@ public class ServletController extends HttpServlet {
 				
 				orderService.create(Order.of(mes.getBody().getOrder()));
 			
-				out.println("<html>"
-						+ "<h3>New order successfully created</h3> "
-						+ "</html>");
+				out.println(HTML_CREATED);
 				break;
 			}
 			case ("update"):{
@@ -82,24 +86,20 @@ public class ServletController extends HttpServlet {
 				try {
 					orderService.update(Order.of(mes.getBody().getOrder()));
 				} catch(OrderNotFoundException e) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct Order id", e);
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, BAD_REQ, e);
 				}	
-				out.println("<html>"
-						+ "<h3>Order successfully updated</h3>"
-						+ "</html>");
+				out.println(HTML_UPDATED);
 				break;
 			}
 
 			case ("delete"):{
 				orderService.deleteById(mes.getBody().getOrder().getId());
 				
-				out.println("<html>"
-						+ "<h3>Order successfully deleted</h3>"
-						+ "</html>");
+				out.println(HTML_DELETED);
 				break;
 			}
 			default:
-				resp.sendError(400, "Bad request!");
+				resp.sendError(400, BAD_REQ);
 			}
 
 		} catch (JAXBException e) {
