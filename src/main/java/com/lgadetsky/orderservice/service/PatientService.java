@@ -7,7 +7,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.lgadetsky.orderservice.model.dto.PatientDto;
 
@@ -16,10 +15,7 @@ public class PatientService implements Service<PatientDto, Integer>{
 	private static final String URL = "http://localhost:8091/";
 	private static final String PATIENT_ID = "patientId/";
 	private static final String PATIENT = "patient/";
-	private static final String FIRST_NAME = "firstName";
-	private static final String MID_NAME = "midName";
-	private static final String LAST_NAME = "lastName";
-	private static final String BIRTHDAY = "birthday";
+	private static final String BR = "/";
 	
 	@Autowired
 	RestTemplate restTemplate;
@@ -61,14 +57,9 @@ public class PatientService implements Service<PatientDto, Integer>{
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL + PATIENT)
-				.queryParam(FIRST_NAME, first)
-				.queryParam(MID_NAME, mid)
-				.queryParam(LAST_NAME, last)
-				.queryParam(BIRTHDAY, birthday);
 		try {
 			ResponseEntity<PatientDto> response = restTemplate
-					.exchange(builder.toUriString(), HttpMethod.GET, entity, PatientDto.class);
+					.exchange(URL + PATIENT + first + BR +  mid + BR + last + BR + birthday, HttpMethod.GET, entity, PatientDto.class);
 			return response.getBody();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -83,7 +74,7 @@ public class PatientService implements Service<PatientDto, Integer>{
 		HttpEntity<PatientDto> requestBody = new HttpEntity<>(obj, headers);
 		
 		try {
-			 restTemplate.put(URL + PATIENT, requestBody);
+			 restTemplate.put(URL + PATIENT + obj.getId(), requestBody);
 			 return obj;
 		} catch (Exception ex) {
 			ex.printStackTrace();

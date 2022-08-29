@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.dto.OrderPatient;
+import com.lgadetsky.orderservice.model.dto.PatientDto;
 import com.lgadetsky.orderservice.service.OrderService;
 import com.lgadetsky.orderservice.service.PatientService;
 
@@ -39,9 +40,27 @@ public class OrderController {
     		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     OrderPatient create(@RequestBody OrderPatient op) {
+    	PatientDto patient = op.getPatient();
+    	String first = patient.getFirstName();
+    	String mid = patient.getMidName();
+    	String last = patient.getLastName();
+    	String birth = patient.getBirthday();
+    	PatientDto dbPatient = patientService.findByName(first, mid, last, birth);
     	
-    	
-    	
+    	if(dbPatient == null) {
+    		//Create new patient
+    		patientService.create(patient);
+    		PatientDto patientWithId = patientService.findByName(first, mid, last, birth);
+    		Order order = op.getOrder();
+    		order.setPatientId(patientWithId.getId());
+    		//Create new order
+    		orderService.create(order);
+    	} else {
+    		// Patient exist -> link patient to order
+    		Order order = op.getOrder();
+    		order.setPatientId(dbPatient.getId());
+    		orderService.create(order);
+    	}    	
     	return op;
     }
 
@@ -55,16 +74,11 @@ public class OrderController {
     		@ApiResponse (responseCode = "404", description = "A resource with requested ID not found", content = @Content),
     		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
-    OrderPatient readById(@PathVariable int id) {
-    	
-    	OrderPatient res = new OrderPatient();
-    	
+    OrderPatient readById(@PathVariable int id) {	
+    	OrderPatient res = new OrderPatient();	
     	res.setOrder(orderService.findById(id));
-    	
-    	
     	res.setPatient(patientService.findById(res.getOrder().getPatientId()));
     	return res;
-
     }
 
     @PutMapping("/order/{id}")
@@ -77,9 +91,14 @@ public class OrderController {
     	@ApiResponse(responseCode = "400", description = "Bar request", content = @Content),
     	@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
-    Order update(@PathVariable int id, @RequestBody Order order) {
-        order.setId(id);
-        return orderService.update(order);
+    OrderPatient update(@PathVariable int id, @RequestBody OrderPatient op) {
+        Order order = op.getOrder(); 
+    	order.setId(id);
+        
+        PatientDto patient = op.getPatient();
+        patientService.update(patient);
+        orderService.update(order);
+        return op;
     }
 
     @DeleteMapping("/order/{id}")
