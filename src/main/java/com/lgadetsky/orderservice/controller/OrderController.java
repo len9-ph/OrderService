@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lgadetsky.orderservice.exception.PatientNotValidException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.dto.OrderPatient;
 import com.lgadetsky.orderservice.model.dto.PatientDto;
@@ -21,6 +22,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * Main controller for order service
+ * Implements methods to work with services
+ *  
+ * @author Leonid Gadetsky
+ * @see OrderService
+ * @see PatientService
+ */
 @RestController
 @Tag(name = "default", description = "Main controller")
 public class OrderController {
@@ -32,14 +41,17 @@ public class OrderController {
 
     @PostMapping("/order")
     @Operation(
-            summary = "Request for adding a new Order",
+            summary = "Request for adding a new order with patient",
             description = "Creates a new order with parameters are contained in the request body"
     )
     @ApiResponses(value = {
-    		@ApiResponse(responseCode = "200", description = "A new order has been successfully created", content = @Content ),
+    		@ApiResponse(responseCode = "200", description = "A new order and patient has been successfully created", content = @Content ),
+    		@ApiResponse(responseCode = "400", description = "You submitted an invalid request", content = @Content),
     		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     OrderPatient create(@RequestBody OrderPatient op) {
+    	if (op.getPatient() == null || op.getPatient().isValid())
+    		throw new PatientNotValidException();
     	PatientDto patient = op.getPatient();
     	String first = patient.getFirstName();
     	String mid = patient.getMidName();
@@ -80,6 +92,19 @@ public class OrderController {
     	res.setPatient(patientService.findById(res.getOrder().getPatientId()));
     	return res;
     }
+    
+    @Operation(
+    		summary = "Get the Patient by id",
+    		description = "Returns object by id or returns null")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "A successful response", content = @Content),
+    		@ApiResponse (responseCode = "404", description = "A resource with requested ID not found", content = @Content),
+    		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
+    })
+    @GetMapping("/order/patient/{id}")
+    PatientDto readPatientById(@PathVariable int id) {
+    	return patientService.findById(id);
+    }
 
     @PutMapping("/order/{id}")
     @Operation(
@@ -88,13 +113,15 @@ public class OrderController {
     )
     @ApiResponses(value = {
     	@ApiResponse(responseCode = "200", description = "Order has been updated succesfully", content = @Content),
-    	@ApiResponse(responseCode = "400", description = "Bar request", content = @Content),
+    	@ApiResponse(responseCode = "400", description = "You submitted an invalid request", content = @Content),
     	@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     OrderPatient update(@PathVariable int id, @RequestBody OrderPatient op) {
         Order order = op.getOrder(); 
     	order.setId(id);
-        
+    	if (op.getPatient() == null || op.getPatient().isValid())
+    		throw new PatientNotValidException();
+    	
         PatientDto patient = op.getPatient();
         patientService.update(patient);
         orderService.update(order);

@@ -9,6 +9,18 @@ import org.springframework.stereotype.Component;
 import com.lgadetsky.orderservice.model.Session;
 import com.lgadetsky.orderservice.service.SessionService;
 
+/**
+ * Custom Cache
+ * Simple cache that doesn't have timeout
+ * All database download in map
+ * We assume that the data does not change
+ * 
+ * This cache is using to work with {@link Session}
+ * 
+ * @author Leonid Gadetsky
+ * @see Cache
+ * @see Session
+ */
 @Component
 public class CacheImpl implements Cache<String, Session> {
 	private Map<String, Session> map;

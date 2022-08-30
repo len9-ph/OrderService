@@ -11,20 +11,51 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
 @ControllerAdvice
+@Slf4j
 public class ControllerAdvisor extends ResponseEntityExceptionHandler{
 	private static final String TIMESTAMP = "timestamp";
 	private static final String MESSAGE = "timestamp";
+	private static final String API = "api";
+	private static final String PATH = "path";
+	private static final String ERROR = "error";
 	private static final String ORDER_NOT_FOUND = "Order not found";
+	private static final String PATIENT_NOT_VALID = "Patient not valid";
 	
 	@ExceptionHandler(OrderNotFoundException.class)
 	public ResponseEntity<Object> handleOrderNotFoundException(
-			OrderNotFoundException ex, WebRequest request){
+			OrderNotFoundException ex, WebRequest request) {
 		
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put(TIMESTAMP, LocalDateTime.now());
 		body.put(MESSAGE, ORDER_NOT_FOUND);
+		log.error(ex.getMessage());
 		return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
 	}
-
+	
+	@ExceptionHandler(RestTemplateException.class)
+	public ResponseEntity<Object> handleRestTemplateException(
+			RestTemplateException ex, WebRequest request) {
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put(TIMESTAMP, LocalDateTime.now());
+		body.put(API, ex.getApi());
+		body.put(PATH, ex.toString());
+		body.put(ERROR, ex.getStatusCode().getReasonPhrase());
+		body.put(MESSAGE, ex.getError());
+		log.error(ex.getError());
+		return new ResponseEntity<>(body, ex.getStatusCode());
+	}
+	
+	@ExceptionHandler(PatientNotValidException.class)
+	public ResponseEntity<Object> handlePatientNotValidException(
+			PatientNotValidException ex, WebRequest request) {
+		
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put(TIMESTAMP, LocalDateTime.now());
+		body.put(MESSAGE, PATIENT_NOT_VALID);
+		log.error(ex.getMessage());
+		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+	}
 }

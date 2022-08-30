@@ -9,8 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import com.lgadetsky.orderservice.exception.RestTemplateErrorHandler;
+
+
 /**
- * Конфигурационный файл Swagger
+ * Configuration of Swagger and RestTemplate
+ * @author Leonid Gadetsky
  */
 @Configuration
 public class Config {
@@ -32,6 +36,7 @@ public class Config {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
     	return builder
+    			.errorHandler(new RestTemplateErrorHandler())
     			.build();
     }
 }

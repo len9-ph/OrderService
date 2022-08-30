@@ -15,9 +15,9 @@ import com.lgadetsky.orderservice.model.Session;
  */
 @Mapper
 public interface SessionMapper {
-	void insert(Session session);
+	int insert(Session session);
 	Session findBySessionId(String sessionId);
 	List<Session> findAll();
-	void update(Session session);
-	void deleteBySessionId(String sessionId);
+	int update(Session session);
+	int deleteBySessionId(String sessionId);
 }

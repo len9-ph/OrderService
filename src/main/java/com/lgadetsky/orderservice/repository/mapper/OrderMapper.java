@@ -11,8 +11,8 @@ import com.lgadetsky.orderservice.model.Order;
  */
 @Mapper
 public interface OrderMapper {
-    void insert(Order order);
+    int insert(Order order);
     Order findById(int id);
-    void update(Order order);
-    void deleteById(int id);
+    int update(Order order);
+    int deleteById(int id);
 }

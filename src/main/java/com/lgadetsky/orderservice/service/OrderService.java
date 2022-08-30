@@ -24,15 +24,15 @@ public class OrderService implements Service<Order, Integer>{
 	
 	@Override
 	@Transactional
-	public Order create(Order order) {
-		orderMapper.insert(order);
+	public Integer create(Order order) {
+		int id = orderMapper.insert(order);
 		
 		List<OrderItem> items = order.getOrderItems();
 		if(items != null && !items.isEmpty()) {
-			items.forEach(item -> item.setOrderId(order.getId()));
+			items.forEach(item -> item.setOrderId(id));
 			orderItemMapper.insertOrderItems(items);
 		}
-		return order;
+		return id;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class OrderService implements Service<Order, Integer>{
 	
 	@Override
 	@Transactional
-	public Order update(Order order) {
+	public Integer update(Order order) {
 		if(orderMapper.findById(order.getId()) != null) {
 			List<OrderItem> oldOrderItems = orderMapper.findById(order.getId()).getOrderItems();
 			List<OrderItem> newOrderItems = order.getOrderItems();
@@ -52,7 +52,7 @@ public class OrderService implements Service<Order, Integer>{
 			List<OrderItem> toInsert = new LinkedList<>();
 			List<OrderItem> toDelete = new LinkedList<>();
 			
-			orderMapper.update(order);
+			int id = orderMapper.update(order);
 			
 			for (OrderItem item : newOrderItems) {
 				if (oldOrderItems.contains(item))
@@ -72,15 +72,15 @@ public class OrderService implements Service<Order, Integer>{
 			if(!toUpdate.isEmpty())
 				toUpdate.forEach(item -> orderItemMapper.update(item));
 			
-			return order;
+			return id;
 		}
 		else throw new OrderNotFoundException();
 	}
 
 	@Override
 	@Transactional
-	public void deleteById(Integer id) {
+	public Integer deleteById(Integer id) {
 		orderItemMapper.deleteByOrderId(id);
-		orderMapper.deleteById(id);
+		return orderMapper.deleteById(id);
 	}
 }

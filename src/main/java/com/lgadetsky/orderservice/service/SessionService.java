@@ -22,9 +22,8 @@ public class SessionService implements Service<Session, String> {
 	}
 
 	@Override
-	public Session create(Session session) {
-		sessionMapper.insert(session);
-		return session;
+	public String create(Session session) {
+		return String.valueOf(sessionMapper.insert(session));
 	}
 
 	@Override
@@ -37,14 +36,14 @@ public class SessionService implements Service<Session, String> {
 	}
 	
 	@Override
-	public Session update(Session session) {
-		sessionMapper.update(session);
-		return session;
+	public String update(Session session) {
+		
+		return String.valueOf(sessionMapper.update(session));
 	}
 
 	@Override
-	public void deleteById(String id) {
-		sessionMapper.deleteBySessionId(id);
+	public String deleteById(String id) {
+		return String.valueOf(sessionMapper.deleteBySessionId(id));
 	}
 
 }
