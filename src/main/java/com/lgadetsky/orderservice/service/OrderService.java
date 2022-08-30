@@ -13,7 +13,13 @@ import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
 import com.lgadetsky.orderservice.repository.mapper.OrderMapper;
 
 /**
+ * Service class that implements {@link Service} interface
+ * Work with {@link OrderMapper} and {@link OrderItemMapper} 
+ * 
  * @author Leonid Gadetsky
+ * @see Service
+ * @see OrderMapper
+ * @see OrderItemMapper
  */
 @org.springframework.stereotype.Service
 public class OrderService implements Service<Order, Integer>{

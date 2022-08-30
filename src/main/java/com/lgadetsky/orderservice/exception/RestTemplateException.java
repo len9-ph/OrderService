@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Exception for the situation when restTemplate send exceptions
+ * @author Leonid Gadetsky
+ */
 @Data
 @EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor

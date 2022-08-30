@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
- * Маппер отвечающий за маппинг сущности OrderItem
+ * Mapper responsible for mapping the OrderItem entity
  * @author Leonid Gadetsky
  * @see OrderItem
  */

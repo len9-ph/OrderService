@@ -8,8 +8,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.lgadetsky.orderservice.config.Config;
 import com.lgadetsky.orderservice.model.dto.PatientDto;
 
+/**
+ * Service class that work with Patient Service
+ * Service use {@link RestTemplate} to send requests
+ * RestTemplate config is in {@link Config}
+ * 
+ * @author Leonid Gadetsky
+ * @see RestTemplate
+ * @see Config
+ */
 @org.springframework.stereotype.Service
 public class PatientService {
 	private static final String URL = "http://localhost:8091/";

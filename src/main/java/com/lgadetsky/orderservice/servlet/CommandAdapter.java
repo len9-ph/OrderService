@@ -2,6 +2,13 @@ package com.lgadetsky.orderservice.servlet;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
+import com.lgadetsky.orderservice.model.dto.MessageDTO;
+
+/**
+ * Adapter using to work with xml messages
+ * @author Leonid Gadetsky
+ * @see MessageDTO
+ */
 public class CommandAdapter extends XmlAdapter<String, Command>{
 
 	@Override

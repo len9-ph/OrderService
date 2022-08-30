@@ -11,8 +11,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.lgadetsky.orderservice.controller.OrderController;
+
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Class that handles exceptions from {@link OrderController}
+ * 
+ * @author Leonid Gadetsky
+ * @see ResponseEntityExceptionHandler
+ * @see ControllerAdvice
+ */
 @ControllerAdvice
 @Slf4j
 public class ControllerAdvisor extends ResponseEntityExceptionHandler{

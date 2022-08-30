@@ -10,8 +10,9 @@ import org.apache.ibatis.annotations.Mapper;
 import com.lgadetsky.orderservice.model.Session;
 
 /**
+ * Mapper responsible for mapping the Session entity
  * @author Leonid Gadetsky
- *
+ * @see Session
  */
 @Mapper
 public interface SessionMapper {

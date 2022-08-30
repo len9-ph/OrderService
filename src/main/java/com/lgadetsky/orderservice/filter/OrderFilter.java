@@ -21,8 +21,12 @@ import com.lgadetsky.orderservice.model.Session;
 import com.lgadetsky.orderservice.service.SessionService;
 
 /**
+ * Filter class that checked sessions correctness
+ * User can get access only if session isn't expire 
+ * or user have admin rights -> timeOutInMinutes equals 0
+ * 
  * @author Leonid Gadetsky
- *
+ * @see SessionService
  */
 @WebFilter(urlPatterns = "/servlet")
 public class OrderFilter implements Filter{

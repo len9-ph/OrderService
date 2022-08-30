@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.lgadetsky.orderservice.model.Order;
 
 /**
- * Маппер отвечающий за маппинг сущности Order
+ * Mapper responsible for mapping the Order entity
  * @author Leonid Gadetsky
  * @see Order
  */

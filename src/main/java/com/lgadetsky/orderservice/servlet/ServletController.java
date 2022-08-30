@@ -24,7 +24,17 @@ import com.lgadetsky.orderservice.model.dto.MessageDTO;
 import com.lgadetsky.orderservice.model.dto.OrderDTO;
 import com.lgadetsky.orderservice.service.OrderService;
 
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * A servlet is used as an alternative entry point to an application.
+ * XML is used for messages.
+ * 
+ * @author Leonid Gadetsky
+ * @see OrderService
+ */
 @WebServlet(value = "/servlet")
+@Slf4j
 public class ServletController extends HttpServlet {
 	private static final long serialVersionUID = 8024790167396194706L;
 	
@@ -51,12 +61,13 @@ public class ServletController extends HttpServlet {
 			 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			 try {
 				 jaxbMarshaller.marshal(OrderDTO.of(orderService.findById(id)), out);
-			 } catch(OrderNotFoundException e) {
-				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, ID_NOT_FOUND, e);
+			 } catch(OrderNotFoundException ex) {
+				 log.error(ex.getMessage());
+				 throw new ResponseStatusException(HttpStatus.NOT_FOUND, ID_NOT_FOUND, ex);
 			 }
 			 } 
-		catch (JAXBException e) {
-			e.printStackTrace();
+		catch (JAXBException ex) {
+			log.error(ex.getMessage());
 		}
 
 	}
@@ -102,8 +113,8 @@ public class ServletController extends HttpServlet {
 				resp.sendError(400, BAD_REQ);
 			}
 
-		} catch (JAXBException e) {
-			e.printStackTrace();
+		} catch (JAXBException ex) {
+			log.error(ex.getMessage());
 		}
 	}
 }

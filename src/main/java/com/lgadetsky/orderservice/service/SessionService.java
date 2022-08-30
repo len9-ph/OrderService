@@ -9,8 +9,12 @@ import com.lgadetsky.orderservice.model.Session;
 import com.lgadetsky.orderservice.repository.mapper.SessionMapper;
 
 /**
+ * Service class that implements {@link Service} interface
+ * Work with {@link SessionMapper}
+ * 
  * @author Leonid Gadetsky
- *
+ * @see Service
+ * @see SessionMapper
  */
 @org.springframework.stereotype.Service
 public class SessionService implements Service<Session, String> {
