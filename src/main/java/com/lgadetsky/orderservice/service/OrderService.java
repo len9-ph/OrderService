@@ -31,10 +31,11 @@ public class OrderService implements Service<Order, Integer>{
 	@Override
 	@Transactional
 	public Integer create(Order order) {
-		int id = orderMapper.insert(order);
-		
+		orderMapper.insert(order);
+		int id = order.getId();
 		List<OrderItem> items = order.getOrderItems();
 		if(items != null && !items.isEmpty()) {
+			System.out.print("ID = " + id);
 			items.forEach(item -> item.setOrderId(id));
 			orderItemMapper.insertOrderItems(items);
 		}
@@ -57,8 +58,8 @@ public class OrderService implements Service<Order, Integer>{
 			List<OrderItem> toUpdate = new LinkedList<>();
 			List<OrderItem> toInsert = new LinkedList<>();
 			List<OrderItem> toDelete = new LinkedList<>();
-			
-			int id = orderMapper.update(order);
+			orderMapper.update(order);
+			int id = order.getId();
 			
 			for (OrderItem item : newOrderItems) {
 				if (oldOrderItems.contains(item))
@@ -87,6 +88,6 @@ public class OrderService implements Service<Order, Integer>{
 	@Transactional
 	public Integer deleteById(Integer id) {
 		orderItemMapper.deleteByOrderId(id);
-		return orderMapper.deleteById(id);
+		return id;
 	}
 }

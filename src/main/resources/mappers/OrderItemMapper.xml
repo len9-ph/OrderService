@@ -7,7 +7,7 @@
     <insert id="insertOrderItems"
             parameterType="com.lgadetsky.orderservice.model.OrderItem"
             useGeneratedKeys="true"
-            keyProperty="id">
+            keyProperty="id">       
         INSERT INTO order_item (id, order_id, item_name) 
         VALUES 
         <foreach collection="items" item="o" separator=", ">

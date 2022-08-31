@@ -21,10 +21,14 @@
 
     <insert id="insert"
             parameterType="com.lgadetsky.orderservice.model.Order"
-            useGeneratedKeys="true"
-            keyProperty="id">
+            useGeneratedKeys="true">
+          <selectKey keyProperty="id"
+          			 resultType ="int"
+          			 order="BEFORE">
+          		select nextval('order_seq')
+          </selectKey>
         insert into "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT, PATIENT_ID)
-        values (NEXTVAL('order_seq'), #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment},  #{patientId});
+        values (#{id}, #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment},  #{patientId});
     </insert>
 	
 	<select id="findById"

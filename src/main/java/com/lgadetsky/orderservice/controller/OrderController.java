@@ -50,14 +50,20 @@ public class OrderController {
     		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     OrderPatient create(@RequestBody OrderPatient op) {
-    	if (op.getPatient() == null || op.getPatient().isValid())
-    		throw new PatientNotValidException();
+//    	if (op.getPatient() == null || op.getPatient().isValid())
+//    		throw new PatientNotValidException();
     	PatientDto patient = op.getPatient();
     	String first = patient.getFirstName();
     	String mid = patient.getMidName();
     	String last = patient.getLastName();
     	String birth = patient.getBirthday();
-    	PatientDto dbPatient = patientService.findByName(first, mid, last, birth);
+    	PatientDto dbPatient;
+    	try {
+    		dbPatient = patientService.findByName(first, mid, last, birth);
+    	} catch(Exception ex) {
+    		dbPatient = null;
+    	}
+    	
     	
     	if(dbPatient == null) {
     		//Create new patient
