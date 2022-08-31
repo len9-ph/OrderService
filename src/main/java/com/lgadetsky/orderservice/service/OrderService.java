@@ -35,7 +35,7 @@ public class OrderService implements Service<Order, Integer>{
 		int id = order.getId();
 		List<OrderItem> items = order.getOrderItems();
 		if(items != null && !items.isEmpty()) {
-			System.out.print("ID = " + id);
+			//System.out.print("ID = " + id);
 			items.forEach(item -> item.setOrderId(id));
 			orderItemMapper.insertOrderItems(items);
 		}

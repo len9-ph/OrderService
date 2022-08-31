@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lgadetsky.orderservice.exception.PatientNotValidException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.dto.OrderPatient;
 import com.lgadetsky.orderservice.model.dto.PatientDto;
@@ -50,8 +49,6 @@ public class OrderController {
     		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
     OrderPatient create(@RequestBody OrderPatient op) {
-//    	if (op.getPatient() == null || op.getPatient().isValid())
-//    		throw new PatientNotValidException();
     	PatientDto patient = op.getPatient();
     	String first = patient.getFirstName();
     	String mid = patient.getMidName();
@@ -125,8 +122,8 @@ public class OrderController {
     OrderPatient update(@PathVariable int id, @RequestBody OrderPatient op) {
         Order order = op.getOrder(); 
     	order.setId(id);
-    	if (op.getPatient() == null || op.getPatient().isValid())
-    		throw new PatientNotValidException();
+//    	if (op.getPatient() == null || op.getPatient().isValid())
+//    		throw new PatientNotValidException();
     	
         PatientDto patient = op.getPatient();
         patientService.update(patient);

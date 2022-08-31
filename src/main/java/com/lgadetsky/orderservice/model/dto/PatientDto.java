@@ -25,7 +25,7 @@ public class PatientDto {
 	
 	private String address;
 	
-	public boolean isValid() {
-		return !(firstName.isBlank() && midName.isBlank() && lastName.isBlank() && birthday.isBlank());
-	}
+//	public boolean isValid() {
+//		return !(firstName.isBlank() && midName.isBlank() && lastName.isBlank() && birthday.isBlank());
+//	}
 }
