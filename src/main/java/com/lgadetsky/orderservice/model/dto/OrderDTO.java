@@ -11,12 +11,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.OrderItem;
+import com.lgadetsky.orderservice.servlet.Command;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author Leonid Gadetsky
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -48,21 +52,26 @@ public class OrderDTO {
 	@XmlElement(name = "item")
     private List<ItemDTO> orderItems; 
 	
+	
+	
+	/**
+	 * Util method that converts dto OrderItems to List of {@link OrderItem}
+	 * method depends on field type if {@link Command} equals create -> when dto contains
+	 * items and orderItems equals null in other way items equals null and orderItems contains {@link ItemDTO}
+	 * @return {@link List} of OrderItem elements 
+	 */
 	public List<OrderItem> toOrderItems(){
-		if(items.isEmpty()) {
-			List<OrderItem> it = new LinkedList<>();
+		List<OrderItem> it = new LinkedList<>();
+		if(items.isEmpty()) 
 			for (ItemDTO dto : orderItems)
-				it.add(OrderItem.of(dto));
-			return it;
-		}else {
-			List<OrderItem> it = new LinkedList<>();
+				it.add(OrderItem.of(dto));	
+		else 
 			for (String s : items) {
 				OrderItem i = OrderItem.of(s);
 				i.setOrderId(id);
 				it.add(i);
-			}
-			return it;
 		}
+		return it;
 	}
 	
 	public static OrderDTO of(Order o) {
