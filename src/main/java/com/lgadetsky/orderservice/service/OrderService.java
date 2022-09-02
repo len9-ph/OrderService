@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lgadetsky.orderservice.exception.OrderNotFoundException;
+import com.lgadetsky.orderservice.exception.OrderNotValidException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.OrderItem;
 import com.lgadetsky.orderservice.repository.mapper.OrderItemMapper;
@@ -31,6 +32,9 @@ public class OrderService implements Service<Order, Integer>{
 	@Override
 	@Transactional
 	public Order create(Order order) {
+		if(!validate(order))
+			throw new OrderNotValidException();
+		
 		orderMapper.insert(order);
 		int id = order.getId();
 		List<OrderItem> items = order.getOrderItems();
@@ -54,6 +58,9 @@ public class OrderService implements Service<Order, Integer>{
 	@Override
 	@Transactional
 	public Order update(Order order) {
+		if(!validate(order))
+			throw new OrderNotValidException();
+		
 		if(orderMapper.findById(order.getId()) != null) {
 			List<OrderItem> oldOrderItems = orderMapper.findById(order.getId()).getOrderItems();
 			List<OrderItem> newOrderItems = order.getOrderItems();
@@ -90,5 +97,12 @@ public class OrderService implements Service<Order, Integer>{
 	public void deleteById(Integer id) {
 		orderItemMapper.deleteByOrderId(id);
 		orderMapper.deleteById(id);
+	}
+	
+	private boolean validate(Order order) {
+		if (order == null | (order.getCustomerName().isBlank()))
+			return false;
+		else 
+			return true;
 	}
 }
