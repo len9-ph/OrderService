@@ -16,7 +16,7 @@
         <result property="customerPhone" column="CUSTOMER_PHONE"/>
         <result property="customerComment" column="CUSTOMER_COMMENT"/>
         <result property="patientId" column="PATIENT_ID"/>
-        <collection property="orderItems" resultMap="orderItemResultMap" columnPrefix="oi_"/>
+        <!-- <collection property="orderItems" resultMap="orderItemResultMap" columnPrefix="oi_"/> -->
     </resultMap>
 
     <insert id="insert"
@@ -30,8 +30,15 @@
         insert into "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT, PATIENT_ID)
         values (#{id}, #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment},  #{patientId});
     </insert>
+    
+    <select id="findById"
+    	    parameterType="int"
+    	    resultMap="orderResultMap">
+    	select * from "order" o
+    		where o.id = #{id};
+    </select>
 	
-	<select id="findById"
+	<!-- <select id="findById"
 			parameterType="int"
 			resultMap="orderResultMap">
 			
@@ -48,7 +55,7 @@
 		from "order" o
 		join order_item i on o.id = i.order_id
 		where o.id = #{id}
-	</select>
+	</select>  -->
 
     <update id="update"
             parameterType="com.lgadetsky.orderservice.model.Order">

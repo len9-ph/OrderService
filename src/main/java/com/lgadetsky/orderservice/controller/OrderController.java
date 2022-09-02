@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lgadetsky.orderservice.model.Order;
@@ -30,6 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * @see PatientService
  */
 @RestController
+@RequestMapping("order")
 @Tag(name = "default", description = "Main controller")
 public class OrderController {
 	
@@ -37,8 +39,24 @@ public class OrderController {
     private OrderService orderService;
 	@Autowired
 	private PatientService patientService;
-
-    @PostMapping("/order")
+	
+	@PostMapping
+	Order create(@RequestBody Order order) {
+		return orderService.create(order);
+	}
+	
+	@GetMapping("/{id}")
+	Order readById(@PathVariable Integer id) {
+		return orderService.findById(id);
+	}
+	
+	@PutMapping
+	Order update(@PathVariable Integer id, @RequestBody Order order) {
+		order.setId(id);
+		return orderService.update(order);
+	}	
+	
+    @PostMapping("/api")
     @Operation(
             summary = "Request for adding a new order with patient",
             description = "Creates a new order with parameters are contained in the request body"
@@ -79,7 +97,7 @@ public class OrderController {
     	return op;
     }
 
-    @GetMapping("/order/{id}")
+    @GetMapping("/api/{id}")
     @Operation(
             summary = "Get the Order by id",
             description = "Returns object by 'orderId' or returns null"
@@ -104,12 +122,12 @@ public class OrderController {
     		@ApiResponse (responseCode = "404", description = "A resource with requested ID not found", content = @Content),
     		@ApiResponse(responseCode = "500", description = "Server error", content = @Content)
     })
-    @GetMapping("/order/patient/{id}")
+    @GetMapping("/patient/{id}")
     PatientDto readPatientById(@PathVariable int id) {
     	return patientService.findById(id);
     }
 
-    @PutMapping("/order/{id}")
+    @PutMapping("/api/{id}")
     @Operation(
             summary = "Request for editing the Order by id",
             description = "Update order by id with parameters are contained in request body"
@@ -131,7 +149,7 @@ public class OrderController {
         return op;
     }
 
-    @DeleteMapping("/order/{id}")
+    @DeleteMapping("/api/{id}")
     @Operation(
             summary = "Request for removing the Order by id",
             description = "Removes order by id"

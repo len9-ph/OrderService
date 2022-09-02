@@ -8,8 +8,8 @@ package com.lgadetsky.orderservice.service;
  * @param <E> - object id type
  */
 public interface Service<T, E> {
-    E create(T obj);
+    T create(T obj);
     T findById(E id);
-    E update(T obj);
-    E deleteById(E id);
+    T update(T obj);
+    void deleteById(E id);
 }

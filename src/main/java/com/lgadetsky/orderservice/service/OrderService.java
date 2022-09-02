@@ -30,36 +30,37 @@ public class OrderService implements Service<Order, Integer>{
 	
 	@Override
 	@Transactional
-	public Integer create(Order order) {
+	public Order create(Order order) {
 		orderMapper.insert(order);
 		int id = order.getId();
 		List<OrderItem> items = order.getOrderItems();
 		if(items != null && !items.isEmpty()) {
-			//System.out.print("ID = " + id);
 			items.forEach(item -> item.setOrderId(id));
 			orderItemMapper.insertOrderItems(items);
 		}
-		return id;
+		return order;
 	}
 
 	@Override
 	public Order findById(Integer id) {
-		if (orderMapper.findById(id) != null)
-			return orderMapper.findById(id);
-		else throw new OrderNotFoundException();
+		if (orderMapper.findById(id) == null)
+			throw new OrderNotFoundException();
+		
+		Order order = orderMapper.findById(id);
+		order.setOrderItems(orderItemMapper.findItemsByOrderId(id));
+		return order;
 	}
 	
 	@Override
 	@Transactional
-	public Integer update(Order order) {
+	public Order update(Order order) {
 		if(orderMapper.findById(order.getId()) != null) {
 			List<OrderItem> oldOrderItems = orderMapper.findById(order.getId()).getOrderItems();
 			List<OrderItem> newOrderItems = order.getOrderItems();
 			List<OrderItem> toUpdate = new LinkedList<>();
 			List<OrderItem> toInsert = new LinkedList<>();
 			List<OrderItem> toDelete = new LinkedList<>();
-			orderMapper.update(order);
-			int id = order.getId();
+			orderMapper.update(order); 
 			
 			for (OrderItem item : newOrderItems) {
 				if (oldOrderItems.contains(item))
@@ -79,15 +80,15 @@ public class OrderService implements Service<Order, Integer>{
 			if(!toUpdate.isEmpty())
 				toUpdate.forEach(item -> orderItemMapper.update(item));
 			
-			return id;
+			return order;
 		}
 		else throw new OrderNotFoundException();
 	}
 
 	@Override
 	@Transactional
-	public Integer deleteById(Integer id) {
+	public void deleteById(Integer id) {
 		orderItemMapper.deleteByOrderId(id);
-		return id;
+		orderMapper.deleteById(id);
 	}
 }
