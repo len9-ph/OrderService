@@ -112,7 +112,10 @@ public class ServletController extends HttpServlet {
 			default:
 				resp.sendError(400, BAD_REQ);
 			}
-
+			
+		}catch (NullPointerException e) {
+			resp.sendError(400, BAD_REQ);
+			log.error(e.getMessage());
 		} catch (JAXBException ex) {
 			log.error(ex.getMessage());
 		}
