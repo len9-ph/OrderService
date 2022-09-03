@@ -11,12 +11,12 @@ public class PatientDto {
 	
 	private String firstName;
 	
-	private String midName;
+	private String middleName;
 	
 	private String lastName;
 
 	private int gender;
-	
+
 	private String birthday;
 	
 	private String phone;

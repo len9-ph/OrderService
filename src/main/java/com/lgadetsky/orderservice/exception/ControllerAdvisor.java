@@ -33,7 +33,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler{
 	private static final String ERROR = "error";
 	private static final String ORDER_NOT_FOUND = "Order not found";
 	private static final String ORDER_NOT_VALID = "Order not valid";
-	private static final String PATIENT_NOT_VALID = "Patient not valid";
+	//private static final String PATIENT_NOT_VALID = "Patient not valid";
 	
 	@ExceptionHandler(OrderNotFoundException.class)
 	public ResponseEntity<Object> handleOrderNotFoundException(
@@ -79,13 +79,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler{
 		return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@ExceptionHandler(PatientNotValidException.class)
-	public ResponseEntity<Object> handlePatientNotValidException(
-			PatientNotValidException ex, WebRequest request) {
-		
+	@ExceptionHandler(NullPointerException.class)
+	public ResponseEntity<Object> handleNullPointerException(
+			NullPointerException ex, WebRequest request) {
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put(TIMESTAMP, LocalDateTime.now());
-		body.put(MESSAGE, PATIENT_NOT_VALID);
+		body.put(MESSAGE, ex.getMessage());
 		log.error(ex.getMessage());
 		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
 	}

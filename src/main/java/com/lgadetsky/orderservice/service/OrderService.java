@@ -62,7 +62,7 @@ public class OrderService implements Service<Order, Integer>{
 			throw new OrderNotValidException();
 		
 		if(orderMapper.findById(order.getId()) != null) {
-			List<OrderItem> oldOrderItems = orderMapper.findById(order.getId()).getOrderItems();
+			List<OrderItem> oldOrderItems = orderItemMapper.findItemsByOrderId(order.getId());
 			List<OrderItem> newOrderItems = order.getOrderItems();
 			List<OrderItem> toUpdate = new LinkedList<>();
 			List<OrderItem> toInsert = new LinkedList<>();

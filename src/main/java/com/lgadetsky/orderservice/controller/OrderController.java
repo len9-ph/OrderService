@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lgadetsky.orderservice.exception.RestTemplateException;
 import com.lgadetsky.orderservice.model.Order;
 import com.lgadetsky.orderservice.model.dto.OrderPatient;
 import com.lgadetsky.orderservice.model.dto.PatientDto;
@@ -50,7 +51,7 @@ public class OrderController {
 		return orderService.findById(id);
 	}
 	
-	@PutMapping
+	@PutMapping("/{id}")
 	Order update(@PathVariable Integer id, @RequestBody Order order) {
 		order.setId(id);
 		return orderService.update(order);
@@ -68,33 +69,32 @@ public class OrderController {
     })
     OrderPatient create(@RequestBody OrderPatient op) {
     	PatientDto patient = op.getPatient();
+    	Order order = op.getOrder();
     	String first = patient.getFirstName();
-    	String mid = patient.getMidName();
+    	String middle = patient.getMiddleName();
     	String last = patient.getLastName();
     	String birth = patient.getBirthday();
-    	PatientDto dbPatient;
     	try {
-    		dbPatient = patientService.findByName(first, mid, last, birth);
-    	} catch(Exception ex) {
-    		dbPatient = null;
-    	}
-    	
-    	
-    	if(dbPatient == null) {
-    		//Create new patient
-    		patientService.create(patient);
-    		PatientDto patientWithId = patientService.findByName(first, mid, last, birth);
-    		Order order = op.getOrder();
-    		order.setPatientId(patientWithId.getId());
-    		//Create new order
-    		orderService.create(order);
-    	} else {
-    		// Patient exist -> link patient to order
-    		Order order = op.getOrder();
+    		// Case when patient exist -> create order and set patientId in order
+    		PatientDto dbPatient = patientService.findByName(first, middle, last, birth);
     		order.setPatientId(dbPatient.getId());
-    		orderService.create(order);
-    	}    	
-    	return op;
+    		Order newOrder = orderService.create(order);
+    		
+    		op.setOrder(newOrder);
+    		op.setPatient(dbPatient);
+    		return op;
+    	} catch(RestTemplateException ex) {
+    		// Case when findByName send exception that means patient doesnt exist -> 
+    		// -> create new patient with new order and set patientId in order 
+    		PatientDto newPatient = patientService.create(patient);
+    		System.out.println("patient : " + newPatient.toString());
+    		order.setPatientId(newPatient.getId());
+    		Order newOrder = orderService.create(order);
+    		
+    		op.setOrder(newOrder);
+    		op.setPatient(newPatient);
+    		return op;
+    	}
     }
 
     @GetMapping("/api/{id}")
@@ -140,8 +140,6 @@ public class OrderController {
     OrderPatient update(@PathVariable int id, @RequestBody OrderPatient op) {
         Order order = op.getOrder(); 
     	order.setId(id);
-//    	if (op.getPatient() == null || op.getPatient().isValid())
-//    		throw new PatientNotValidException();
     	
         PatientDto patient = op.getPatient();
         patientService.update(patient);
@@ -161,5 +159,4 @@ public class OrderController {
     void deleteById(@PathVariable int id) {
         orderService.deleteById(id);
     }
-
 }
