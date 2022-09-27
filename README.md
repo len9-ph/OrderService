@@ -8,7 +8,7 @@ During the practice, three tasks were solved
    - Servlet filters, access control to service resources
 3. synchronous interaction of services
 
-With project work with another service: [Patient Service](https://github.com/len9-ph/PatientService)
+This project work with another service: [Patient Service](https://github.com/len9-ph/PatientService)
 
 
 
